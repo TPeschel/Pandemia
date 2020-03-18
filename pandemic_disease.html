@@ -1,0 +1,155 @@
+<!DOCTYPE = HTML>
+<html>
+	<head>
+		<title>
+			CORONA SIMULATIONS
+		</title>
+		<script src="iterasures.js" type="text/javascript"></script>
+		<script src="plot2d.js" type="text/javascript"></script>
+		<script src="pandemic_disease.js" type="text/javascript"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="corona.css"> -->
+		<style>
+			body {
+				background-color : #383838;
+				color : #a0a0a0;
+			}
+			th, td {
+				background-color : #404040;
+				color : #f0f0f0;
+				padding: 5px;
+				width:50%;
+			}
+			table {
+				background-color : #303030;
+				color : #f0f0f0;
+				padding: 5px;
+				width:50%;
+				height:100%;
+				border-spacing: 5px;
+				text-align: center;
+				position: relative;
+			}
+			canvas {
+				background-color : #ffffff;
+				border: 1px solid black;
+				padding: 5px;
+				width:98%;
+				height:98%;
+				border-spacing: 15px;
+				text-align: center;
+				position: relative;
+			}
+		</style>
+	</head>
+	<body>
+		<table style="width:100%">
+			<tr>
+				<th>CORONA SIMULATION</th>
+				<th>STATISTIC</th>
+			</tr>
+			<tr>
+				<td>
+					<canvas id="cnvs1">
+						no html 5 supported
+					</canvas>
+				</td>
+				<td>
+					<canvas id="cnvs2">
+						no html 5 supported
+					</canvas>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p id="lout1">
+					  healthy: 0<br>sick: 0 <br>recovered: 0;
+					</p>
+				</td>
+				<td>
+					<p id="lout2">
+					  healthy: 0<br>sick: 0 <br>recovered: 0;
+					</p>
+				</td>
+			</tr>
+		</table>
+		<script type="text/javascript">
+
+		  let
+		  t_id = 0,
+		  st = 200.
+		  t    = arr( 10 * st, add( ) ),
+		  heal = arr( 10 * st ),
+		  sick = arr( 10 * st ),
+		  reco = arr( 10 * st ),
+		  dead = arr( 10 * st ),
+			updt = function ( ) {
+
+				requestAnimationFrame ( updt );
+
+				updCorona ( );
+			},
+
+		  corona = new Corona ( "cnvs1", 100, 20, 1., 5.e1, st );
+
+	    corona.bcol ( "#404040", "202020");
+
+			corona.fcol ( "#808080", "#606060" );
+
+	    corona.fnt ( "12pt Calibri" );
+
+		  updCorona = function ( ) {
+
+		    corona.acc( );
+
+		    corona.move( );
+
+				corona.draw ( );
+
+		    let
+		    state = corona.state( );
+
+		    heal[ t_id ] = state[ 0 ];
+		    sick[ t_id ] = state[ 1 ];
+		    reco[ t_id ] = state[ 2 ];
+		    dead[ t_id ] = state[ 3 ];
+
+		    t_id = t_id < 10. * st ? t_id + 1 : 0;
+
+		    d = document.getElementById( "lout1" );
+
+		    d.innerHTML = "healthy: " + state[ 0 ].toString( ) + "<br>sick:" + state[ 1 ].toString( ) + "<br>recovered: " + state[ 2 ].toString( ) + "<br>dead: " + state[ 3 ].toString( );
+
+        d = document.getElementById( "lout2" );
+
+		    d.innerHTML = "healthy: " + state[ 0 ].toString( ) + "<br>sick:" + state[ 1 ].toString( ) + "<br>recovered: " + state[ 2 ].toString( ) + "<br>dead: " + state[ 3 ].toString( );
+
+        plot2d = new Plot2d( "cnvs2" );
+
+		    plot2d.bcol ( "#404040" );
+
+		    plot2d.fcol ( "#00ff00" );
+		    plot2d.addYX ( heal, t );
+
+		    plot2d.fcol ( "#ff0000" );
+		    plot2d.addYX ( sick, t );
+
+		    plot2d.fcol ( "#ffff00" );
+		    plot2d.addYX ( reco, t );
+
+		    plot2d.fcol ( "#0000ff" );
+		    plot2d.addYX ( dead, t );
+
+				plot2d.fcol ( "#a0a0a0", "#f0f0f0" );
+				plot2d.fnt ( "12pt Calibri" );
+				//plot2d.grid ( );
+
+				plot2d.draw ( );
+      };
+
+			requestAnimationFrame ( updt );
+		</script>
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+	</body>
+</html>
