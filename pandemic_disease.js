@@ -78,7 +78,7 @@ function collide_hwall( human, hwall, rad ) {
 
   if( Math.abs( hwall.y - human.pos.y ) < rad ) {
 
-   human.vel.y = sign( human.pos.y - hwall.y ) * Math.abs( 1.1 * human.vel.y );
+   human.vel.y = sign( human.pos.y - hwall.y ) * Math.abs( 1.05 * human.vel.y );
   }
 
   return human;
@@ -93,7 +93,7 @@ function collide_vwall( human, vwall, rad ) {
 
   if( Math.abs( vwall.x - human.pos.x ) < rad ) {
 
-   human.vel.x = sign( human.pos.x - vwall.x ) * Math.abs( 1.1 * human.vel.x );
+   human.vel.x = sign( human.pos.x - vwall.x ) * Math.abs( 1.05 * human.vel.x );
   }
 
   return human;
@@ -113,24 +113,29 @@ Display = function( cnvs_width, cnvs_height, disp_width, disp_height ) {
 
   let dis = this;
 
+  dis.cnvs_width  = cnvs_width;
+  dis.cnvs_height = cnvs_height;
+  dis.disp_width  = disp_width;
+  dis.disp_height = disp_height;
+
   dis.create = function( ) {
 
     let
-    cdev = cnvs_height / cnvs_width,
-    ddev = disp_height / disp_width;
+    cdev = dis.cnvs_height / dis.cnvs_width,
+    ddev = dis.disp_height / dis.disp_width;
 
     if( cdev < ddev ) {
 
-      dis.ad2c = cnvs_height / disp_height;
+      dis.ad2c = dis.cnvs_height / dis.disp_height;
 
-      dis.off = V2( .5 * ( cnvs_width - dis.ad2c * disp_width ), 0 );
+      dis.off = V2( .5 * ( dis.cnvs_width - dis.ad2c * dis.disp_width ), 0 );
 
     }
     else {
 
-      dis.ad2c = cnvs_width / disp_width;
+      dis.ad2c = dis.cnvs_width / dis.disp_width;
 
-      dis.off = V2( 0, .5 * ( cnvs_height - dis.ad2c * disp_height ) );
+      dis.off = V2( 0, .5 * ( dis.cnvs_height - dis.ad2c * dis.disp_height ) );
     }
 
     dis.ac2d = 1. / dis.ad2c;
@@ -174,7 +179,7 @@ function rand( ) {
   return Math.random( );
 }
 
-Pandemic = function ( cnvs_name, count_of_humans = 100, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 1000 ) {
+Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 1000 ) {
 
 	let dis = this;
 
@@ -184,7 +189,8 @@ Pandemic = function ( cnvs_name, count_of_humans = 100, radius = .01, velocity =
 	dis.cntxt        = this.cnvs.getContext ( "2d" );
 	dis.cntxt.font   = "12pt Calibri";
 	dis.dsp          = new Display( dis.cnvs.width, dis.cnvs.height, 2, 1 );
-	dis.cnt          = count_of_humans;
+	dis.cnt_x        = count_of_humans_x;
+	dis.cnt_y        = count_of_humans_y;
 	dis.sicktime     = sicktime;
 	dis.rad          = radius;
 	dis.vel          = velocity;
@@ -195,14 +201,16 @@ Pandemic = function ( cnvs_name, count_of_humans = 100, radius = .01, velocity =
 
 	dis.create = function( ) {
 
-    for( let i = 0; i < 10; i ++ ) {
+    console.log( dis.dsp.disp_width / dis.dsp.disp_height );
 
-      let y = ( .5 + i ) / 10.;
+    for( let i = 0; i < dis.cnt_y; i ++ ) {
 
-      for( let j = 0; j < 20; j ++ ) {
+      let y = ( .5 + i ) / dis.cnt_y;
+
+      for( let j = 0; j < dis.cnt_x; j ++ ) {
 
         let
-        x = ( .5 + j ) / 10.,
+        x = ( .5 + j ) / dis.cnt_x * dis.dsp.disp_width / dis.dsp.disp_height,
         alpha = 6.28 * rand( );
 
         dis.hmn.push( new Human( V2( x, y ), V2( dis.vel * Math.cos( alpha ), dis.vel * Math.sin( alpha ) ), V2( 0, 0 ), 0 ) );
