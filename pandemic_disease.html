@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>
-			CORONA SIMULATIONS
+			PANDEMIC DISEASE SIMULATIONS
 		</title>
 		<script src="iterasures.js" type="text/javascript"></script>
 		<script src="plot2d.js" type="text/javascript"></script>
@@ -13,28 +13,12 @@
 				background-color : #383838;
 				color : #a0a0a0;
 			}
-			th, td {
-				background-color : #404040;
-				color : #f0f0f0;
-				padding: 5px;
-				width:50%;
-			}
-			table {
-				background-color : #303030;
-				color : #f0f0f0;
-				padding: 5px;
-				width:50%;
-				height:100%;
-				border-spacing: 5px;
-				text-align: center;
-				position: relative;
-			}
-			canvas {
+		  canvas {
 				background-color : #ffffff;
 				border: 1px solid black;
 				padding: 5px;
-				width:98%;
-				height:98%;
+				width:99%;
+				height:94%;
 				border-spacing: 15px;
 				text-align: center;
 				position: relative;
@@ -42,37 +26,18 @@
 		</style>
 	</head>
 	<body>
-		<table style="width:100%">
-			<tr>
-				<th>CORONA SIMULATION</th>
-				<th>STATISTIC</th>
-			</tr>
-			<tr>
-				<td>
-					<canvas id="cnvs1">
-						no html 5 supported
-					</canvas>
-				</td>
-				<td>
-					<canvas id="cnvs2">
-						no html 5 supported
-					</canvas>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p id="lout1">
-					  healthy: 0<br>sick: 0 <br>recovered: 0;
-					</p>
-				</td>
-				<td>
-					<p id="lout2">
-					  healthy: 0<br>sick: 0 <br>recovered: 0;
-					</p>
-				</td>
-			</tr>
-		</table>
+		<p>
+		  PANDEMIC DISEASE SIMULATIONS
+		</p>
+	  <div>
+	    <canvas id="cnvs">
+	      no html 5 supported
+  	  </canvas>
+	  </div>
 		<script type="text/javascript">
+
+		  let
+		  pan = new Pandemic( "cnvs", count_of_humans = 100, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 1000 );
 
 		  let
 		  t_id = 0,
@@ -84,29 +49,29 @@
 		  dead = arr( 10 * st ),
 			updt = function ( ) {
 
-				requestAnimationFrame ( updt );
+		    if( 0 < pan.state( )[ 1 ] )
 
-				updCorona ( );
+  				requestAnimationFrame ( updt );
+
+				updPan ( );
 			},
 
-		  corona = new Corona ( "cnvs1", 100, 20, 1., 5.e1, st );
+		  pan.bcol ( "#404040", "202020");
 
-	    corona.bcol ( "#404040", "202020");
+			pan.fcol ( "#808080", "#606060" );
 
-			corona.fcol ( "#808080", "#606060" );
+	    pan.fnt ( "12pt Calibri" );
 
-	    corona.fnt ( "12pt Calibri" );
+		  updPan = function ( ) {
 
-		  updCorona = function ( ) {
+		    pan.accelerate( );
 
-		    corona.acc( );
+		    pan.move( );
 
-		    corona.move( );
-
-				corona.draw ( );
-
+				pan.draw ( );
+/*
 		    let
-		    state = corona.state( );
+		    state = pan.state( );
 
 		    heal[ t_id ] = state[ 0 ];
 		    sick[ t_id ] = state[ 1 ];
@@ -143,13 +108,11 @@
 				plot2d.fnt ( "12pt Calibri" );
 				//plot2d.grid ( );
 
-				plot2d.draw ( );
+				plot2d.draw ( ); */
       };
 
 			requestAnimationFrame ( updt );
-		</script>
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    </script>
 	</body>
 </html>

@@ -106,7 +106,7 @@ function arr ( pI_size, pUFct_fct = cst ( 0 ), pA_dst = [ ] ) {
 	return seq ( pUFct_fct, 0, pI_size, pA_dst );
 }
 
-function rnd ( mn, mx ) {
+function rnd ( mn = 0, mx = 1 ) {
 
 	var
 	mn = mn,
