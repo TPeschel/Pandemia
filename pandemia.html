@@ -37,16 +37,16 @@
 		<script type="text/javascript">
 
 		  let
-		  pan = new Pandemic( "cnvs", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .001, acceleration = 1.e-8, sicktime = 500 );
+		  pan = new Pandemic( "cnvs", count_of_humans_x = 14, count_of_humans_y = 7, radius = .020, velocity = .0011, acceleration = 1.e-7, sicktime = 1000 );
 
 		  let
 		  t_id = 0,
 		  st = 200.
-		  t    = arr( 10 * st, add( ) ),
-		  heal = arr( 10 * st ),
-		  sick = arr( 10 * st ),
-		  reco = arr( 10 * st ),
-		  dead = arr( 10 * st ),
+		  t    = [ ],
+		  heal = [ ],
+		  sick = [ ],
+		  reco = [ ],
+		  dead = [ ],
 			updt = function ( ) {
 
 		    if( 0 < pan.state( )[ 1 ] )
@@ -68,50 +68,63 @@
 
 		    pan.move( );
 
-				pan.draw ( );
-/*
-		    let
+        let
 		    state = pan.state( );
 
-		    heal[ t_id ] = state[ 0 ];
-		    sick[ t_id ] = state[ 1 ];
-		    reco[ t_id ] = state[ 2 ];
-		    dead[ t_id ] = state[ 3 ];
+		    t.push( 0 < t.length ? t[ t.length - 1 ] + 1 : 0 );
+		    heal.push( state[ 0 ] );
+		    sick.push( state[ 1 ] );
+		    reco.push( state[ 2 ] );
+		    dead.push( state[ 3 ] );
+
+		    let
+		    nul = arr( heal.length ),
+        	top = arr( heal.length, cst( pan.hmn.length + 10 ) ),
+        	sr = rel( rAdd, sick, reco ),
+		    srd = rel( rAdd, sr, dead ),
+		    srdh = rel( rAdd, srd, heal );
 
 		    t_id = t_id < 10. * st ? t_id + 1 : 0;
 
-		    d = document.getElementById( "lout1" );
+/*		    d = document.getElementById( "lout1" );
 
 		    d.innerHTML = "healthy: " + state[ 0 ].toString( ) + "<br>sick:" + state[ 1 ].toString( ) + "<br>recovered: " + state[ 2 ].toString( ) + "<br>dead: " + state[ 3 ].toString( );
 
         d = document.getElementById( "lout2" );
 
 		    d.innerHTML = "healthy: " + state[ 0 ].toString( ) + "<br>sick:" + state[ 1 ].toString( ) + "<br>recovered: " + state[ 2 ].toString( ) + "<br>dead: " + state[ 3 ].toString( );
+*/
+    	    plot2d = new Plot2d( "cnvs" );
 
-        plot2d = new Plot2d( "cnvs2" );
+		    plot2d.bcol ( "#808080" );
 
-		    plot2d.bcol ( "#404040" );
+		    plot2d.fcol ( "#808080" );
+		    plot2d.addYX ( nul, t );
+
+		    plot2d.fcol ( "#808080" );
+		    plot2d.addYX ( top, t );
 
 		    plot2d.fcol ( "#00ff00" );
-		    plot2d.addYX ( heal, t );
+		    plot2d.addYX ( srdh, t );
+
+		    plot2d.fcol ( "#000000" );
+		    plot2d.addYX ( srd, t );
+
+		    plot2d.fcol ( "#ffff00" );
+		    plot2d.addYX ( sr, t );
 
 		    plot2d.fcol ( "#ff0000" );
 		    plot2d.addYX ( sick, t );
 
-		    plot2d.fcol ( "#ffff00" );
-		    plot2d.addYX ( reco, t );
-
-		    plot2d.fcol ( "#0000ff" );
-		    plot2d.addYX ( dead, t );
-
-				plot2d.fcol ( "#a0a0a0", "#f0f0f0" );
-				plot2d.fnt ( "12pt Calibri" );
+	        plot2d.fcol ( "#a0a0a0", "#f0f0f0" );
+			plot2d.fnt ( "12pt Calibri" );
 				//plot2d.grid ( );
 
-				plot2d.draw ( ); */
+        pan.draw ( );
+				plot2d.draw ( );
       };
 
-			requestAnimationFrame ( updt );
+		requestAnimationFrame ( updt );
 
     </script>
 	</body>

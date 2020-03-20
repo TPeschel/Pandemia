@@ -61,6 +61,39 @@ function Wall( x0, y0, x1, y1 ) {
   dis.y1 = y1 <  y0 ? y0 : y1;
 
   dis.collide = function( human, rad ) {
+  
+    let
+    r2  = rad * rad,
+    dx0 = Math.max( dis.x0 - human.pos.x, 0 ),
+    dy0 = Math.max( dis.y0 - human.pos.y, 0 ),
+    dx1 = Math.max( human.pos.x - dis.x1, 0 ),
+    dy1 = Math.max( human.pos.y - dis.y1, 0 ),
+    dxs0 = dx0 * dx0,
+    dys0 = dy0 * dy0,
+    dxs1 = dx1 * dx1,
+    dys1 = dy1 * dy1,
+    axe = new V2( dxs0 < dxs1 ? dx1 : - dx0, dys0 < dys1 ? dy1 : - dy0 ),
+    axx = axe.x * axe.x,
+    a2xy = 2 * axe.x * axe.y,
+    ayy = axe.y * axe.y;
+
+    if( axx + ayy < r2 && v2dot( axe, human.vel ) < 0 ) {
+
+      //console.log( axx + ayy );
+      let
+      aln = - 1. / ( axx + ayy );
+
+      human.vel.x = .001 * axe.x + aln * ( ( axx - ayy ) * human.vel.x + a2xy *          human.vel.y ) ;
+      human.vel.y = .001 * axe.y + aln * ( a2xy *          human.vel.x + ( ayy - axx ) * human.vel.y );
+
+      human.pos = v2add( human.pos, V2( 1.1 * human.vel.x, 1.1 * human.vel.y )  );
+    } 
+
+    return human;
+  }
+  
+  /*
+  dis.collide = function( human, rad ) {
 
     let xmirrored = false;
 
@@ -117,8 +150,8 @@ function Wall( x0, y0, x1, y1 ) {
 
     return human;
   }
+  */
 }
-
 function sign( x ) {
 
   return x < 0 ? -1 : 0 < x ? 1 : 0;
@@ -204,7 +237,7 @@ function rand( ) {
   return Math.random( );
 }
 
-Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 1000 ) {
+Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 500 ) {
 
 	let dis = this;
 
@@ -222,7 +255,7 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 	dis.acc          = acceleration;
 	dis.hmn          = [ ];
 	dis.walls        = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
-	                     new Wall( .99, .2, 1.01, .8 ), new Wall( .49, .2, .51, .8 ), new Wall( 1.49, .2, 1.51, .8 ), new Wall( .2, .49, 1.8, .51 ) ];
+	                     new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ];
 
 	dis.create = function( ) {
 
@@ -327,8 +360,8 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
       if( h.dis < dis.sicktime + 2 ) {
 
-        h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x - .0001 * h.vel.x, .005 ), -.005 );
-        h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y - .0001 * h.vel.y, .005 ), -.005 );
+        h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x - .000001 * h.vel.x, .005 ), -.005 );
+        h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y - .000001 * h.vel.y, .005 ), -.005 );
       }
       else {
 
