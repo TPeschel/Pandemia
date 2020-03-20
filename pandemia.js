@@ -221,7 +221,8 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 	dis.vel          = velocity;
 	dis.acc          = acceleration;
 	dis.hmn          = [ ];
-	dis.walls        = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ), new Wall( .99, .2, 1.01, .8 ), new Wall( .2, .49, 1.8, .51 ) ];
+	dis.walls        = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
+	                     new Wall( .99, .2, 1.01, .8 ), new Wall( .49, .2, .51, .8 ), new Wall( 1.49, .2, 1.51, .8 ), new Wall( .2, .49, 1.8, .51 ) ];
 
 	dis.create = function( ) {
 
@@ -426,7 +427,7 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 	        ? "#ff0000"
 	        : dis.sicktime + 1 == h.dis
 	          ? "#ffff40"
-	          : "#404080";
+	          : "#101010";
 
 	    dis.cntxt.fill( );
 	  }
