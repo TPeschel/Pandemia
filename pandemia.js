@@ -62,8 +62,6 @@ function Wall( x0, y0, x1, y1 ) {
 
   dis.collide = function( human, rad ) {
 
-    // console.log( human );
-
     let xmirrored = false;
 
     if( dis.y0 < human.pos.y + rad && human.pos.y - rad < dis.y1 ) {
@@ -76,7 +74,7 @@ function Wall( x0, y0, x1, y1 ) {
 
           human.pos.x = 2 * ( dis.x0 - rad ) - human.pos.x;
 
-          xmirrored = false;
+          xmirrored = true;
         }
       }
       else
@@ -88,7 +86,7 @@ function Wall( x0, y0, x1, y1 ) {
 
           human.pos.x = 2 * ( dis.x1 + rad ) - human.pos.x;
 
-          xmirrored = false;
+          xmirrored = true;
         }
       }
     }
