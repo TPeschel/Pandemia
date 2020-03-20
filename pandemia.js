@@ -46,57 +46,84 @@ function v2dist( a, b ) {
   return v2abs( v2sub( b, a ) );
 }
 
-function HWall( y, x0, x1 ) {
+function swap( x, y ) {
 
-  return {
-    y  : y,
-    x0 : x0,
-    x1 : x1
-  }
+  return [ y, x ];
 }
 
-function VWall( x, y0, y1 ) {
+function Wall( x0, y0, x1, y1 ) {
 
-  return {
-    x  : x,
-    y0 : y0,
-    y1 : y1
+  let dis = this;
+
+  dis.x0 = x0 <= x1 ? x0 : x1;
+  dis.x1 = x1 <  x0 ? x0 : x1;
+  dis.y0 = y0 <= y1 ? y0 : y1;
+  dis.y1 = y1 <  y0 ? y0 : y1;
+
+  dis.collide = function( human, rad ) {
+
+    // console.log( human );
+
+    let xmirrored = false;
+
+    if( dis.y0 < human.pos.y + rad && human.pos.y - rad < dis.y1 ) {
+
+      if( 0 < human.vel.x ) {
+
+        if( Math.abs( dis.x0 - human.pos.x ) < rad ) {
+
+          human.vel.x = - Math.abs( human.vel.x );
+
+          human.pos.x = 2 * ( dis.x0 - rad ) - human.pos.x;
+
+          xmirrored = false;
+        }
+      }
+      else
+      if( human.vel.x < 0 ) {
+
+        if( Math.abs( human.pos.x - dis.x1 ) < rad ) {
+
+          human.vel.x = + Math.abs( human.vel.x );
+
+          human.pos.x = 2 * ( dis.x1 + rad ) - human.pos.x;
+
+          xmirrored = false;
+        }
+      }
+    }
+
+    if( ! xmirrored )
+    if( dis.x0 < human.pos.x + rad && human.pos.x - rad < dis.x1 ) {
+
+      if( 0 < human.vel.y ) {
+
+        if( Math.abs( dis.y0 - human.pos.y ) < rad ) {
+
+          human.vel.y = - Math.abs( human.vel.y );
+
+          human.pos.y = 2 * ( dis.y0 - rad ) - human.pos.y;
+        }
+      }
+      else
+      if( human.vel.y < 0 ) {
+
+        if( Math.abs( human.pos.y - dis.y1 ) < rad ) {
+
+          human.vel.y = + Math.abs( human.vel.y );
+
+          human.pos.y = 2 * ( dis.y1 + rad ) - human.pos.y;
+        }
+      }
+    }
+
+    return human;
   }
 }
 
 function sign( x ) {
 
   return x < 0 ? -1 : 0 < x ? 1 : 0;
-}
-
-function collide_hwall( human, hwall, rad ) {
-
-  if( human.pos.x + rad < hwall.x0 || hwall.x1 < human.pos.x - rad ) {
-
-    return human;
-  }
-
-  if( Math.abs( hwall.y - human.pos.y ) < rad ) {
-
-   human.vel.y = sign( human.pos.y - hwall.y ) * Math.abs( 1.05 * human.vel.y );
-  }
-
-  return human;
-}
-
-function collide_vwall( human, vwall, rad ) {
-
-  if( human.pos.y + rad < vwall.y0 || vwall.y1 < human.pos.y - rad ) {
-
-    return human;
-  }
-
-  if( Math.abs( vwall.x - human.pos.x ) < rad ) {
-
-   human.vel.x = sign( human.pos.x - vwall.x ) * Math.abs( 1.05 * human.vel.x );
-  }
-
-  return human;
 }
 
 function Human( pos, vel, acc, dis ) {
@@ -196,14 +223,11 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 	dis.vel          = velocity;
 	dis.acc          = acceleration;
 	dis.hmn          = [ ];
-	dis.vwalls       = [ new VWall( .01, .01, .99 ),  new VWall( 1., .15, .85 ),  new VWall( 1.99, .01, .99 ) ];
-	dis.hwalls       = [ new HWall( .01, .01, 1.99 ), new HWall( .5, .25, 1.75 ), new HWall( .99, .01, 1.99 ) ];
+	dis.walls        = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ), new Wall( .99, .2, 1.01, .8 ), new Wall( .2, .49, 1.8, .51 ) ];
 
 	dis.create = function( ) {
 
-    console.log( dis.dsp.disp_width / dis.dsp.disp_height );
-
-    for( let i = 0; i < dis.cnt_y; i ++ ) {
+	  for( let i = 0; i < dis.cnt_y; i ++ ) {
 
       let y = ( .5 + i ) / dis.cnt_y;
 
@@ -277,15 +301,10 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
 	dis.collide_walls = function( h ) {
 
-	  for( vw of dis.vwalls ) {
+    for( w of dis.walls ) {
 
-	    h = collide_vwall( h, vw, dis.rad );
-	  }
-
-	  for( hw of dis.hwalls ) {
-
-	    h = collide_hwall( h, hw, dis.rad );
-	  }
+      h = w.collide( h, dis.rad );
+    }
 
 	  return h;
 	}
@@ -377,32 +396,17 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
     dis.cntxt.fillRect( 0, 0, dis.cnvs.width, dis.cnvs.height );
 
-    dis.cntxt.strokeStyle = "#c0c0c0";
+    dis.cntxt.fillStyle = "#606060";
 
-	  for( hw of dis.hwalls ) {
-
-	    let
-	    y  = dis.dsp.yd2c( hw.y ),
-	    x0 = dis.dsp.xd2c( hw.x0 ),
-	    x1 = dis.dsp.xd2c( hw.x1 );
-
-	    dis.cntxt.beginPath( )
-	    dis.cntxt.moveTo( x0, y );
-	    dis.cntxt.lineTo( x1, y );
-	    dis.cntxt.stroke( );
-	  }
-
-	  for( vw of dis.vwalls ) {
+	  for( w of dis.walls ) {
 
 	    let
-	    x  = dis.dsp.xd2c( vw.x ),
-	    y0 = dis.dsp.yd2c( vw.y0 ),
-	    y1 = dis.dsp.yd2c( vw.y1 );
+	    x0 = dis.dsp.xd2c( w.x0 ),
+	    x1 = dis.dsp.xd2c( w.x1 ),
+      y0 = dis.dsp.yd2c( w.y0 ),
+	    y1 = dis.dsp.yd2c( w.y1 );
 
-	    dis.cntxt.beginPath( )
-	    dis.cntxt.moveTo( x, y0 );
-	    dis.cntxt.lineTo( x, y1 );
-	    dis.cntxt.stroke( );
+	    dis.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );
 	  }
 
 	  let r = dis.dsp.ad2c * dis.rad;
