@@ -1,73 +1,59 @@
-function V2( x, y ) {
+const STATE = {
 
-  return {
-    x : x,
-    y : y
-  };
+  healthy             : 0,
+  sick_treated        : 1,
+  sick_untreated      : 2,
+  recovered_treated   : 3,
+  recovered_untreated : 4,
+  dead_treated        : 5,
+  dead_untreated      : 6  
 }
 
-function v2dot( a, b ) {
+function Human( pos, vel, acc, sicktime = 0, state = STATE.healthy ) {
 
-  return a.x * b.x + a.y * b.y;
-}
+  let o = this;
 
-function v2abs2( a ) {
+  o.pos   = pos;
+  o.vel   = vel;
+  o.acc   = acc;
+  o.time  = sicktime;
+  o.state = state;
 
-  return v2dot( a, a );
-}
+  o.new_state = function( state = STATE.sick_treated ) {
+    
+    o.state = state;
 
-function v2abs( a ) {
+    if( o.state == STATE.healthy ) {
 
-  return Math.sqrt( v2dot( a, a ) );
-}
-
-function v2add( a, b ) {
-
-  return V2( a.x + b.x, a.y + b.y );
-}
-
-function v2sub( a, b ) {
-
-  return V2( a.x - b.x, a.y - b.y );
-}
-
-function v2mul( a, b ) {
-
-  return V2( a.x * b.x, a.y * b.y );
-}
-
-function v2div( a, b ) {
-
-  return V2( a.x / b.x, a.y / b.y );
-}
-
-function v2dist( a, b ) {
-
-  return v2abs( v2sub( b, a ) );
-}
-
-function swap( x, y ) {
-
-  return [ y, x ];
+      o.time = 0;
+    }
+  }
 }
 
 function Wall( x0, y0, x1, y1 ) {
 
-  let dis = this;
+  let o = this;
 
-  dis.x0 = x0 <= x1 ? x0 : x1;
-  dis.x1 = x1 <  x0 ? x0 : x1;
-  dis.y0 = y0 <= y1 ? y0 : y1;
-  dis.y1 = y1 <  y0 ? y0 : y1;
+  o.x0 = x0 <= x1 ? x0 : x1;
+  o.x1 = x1 <  x0 ? x0 : x1;
+  o.y0 = y0 <= y1 ? y0 : y1;
+  o.y1 = y1 <  y0 ? y0 : y1;
 
-  dis.collide = function( human, rad ) {
+  o.collide = function( human, rad ) {
+    
+    if(
+      human.pos.x + rad < o.x0 || o.x1 < human.pos.x - rad ||
+      human.pos.y + rad < o.y0 || o.y1 < human.pos.y - rad ) {
+      
+      return human;
+    }
   
     let
     r2  = rad * rad,
-    dx0 = Math.max( dis.x0 - human.pos.x, 0 ),
-    dy0 = Math.max( dis.y0 - human.pos.y, 0 ),
-    dx1 = Math.max( human.pos.x - dis.x1, 0 ),
-    dy1 = Math.max( human.pos.y - dis.y1, 0 ),
+    dx0 = Math.max( o.x0 - human.pos.x, 0 ),
+    dy0 = Math.max( o.y0 - human.pos.y, 0 ),
+    dx1 = Math.max( human.pos.x - o.x1, 0 ),
+    dy1 = Math.max( human.pos.y - o.y1, 0 ),
     dxs0 = dx0 * dx0,
     dys0 = dy0 * dy0,
     dxs1 = dx1 * dx1,
@@ -79,157 +65,22 @@ function Wall( x0, y0, x1, y1 ) {
 
     if( axx + ayy < r2 && v2dot( axe, human.vel ) < 0 ) {
 
-      //console.log( axx + ayy );
       let
       aln = - 1. / ( axx + ayy );
 
       human.vel.x = .001 * axe.x + aln * ( ( axx - ayy ) * human.vel.x + a2xy *          human.vel.y ) ;
       human.vel.y = .001 * axe.y + aln * ( a2xy *          human.vel.x + ( ayy - axx ) * human.vel.y );
 
-      human.pos = v2add( human.pos, V2( 1.1 * human.vel.x, 1.1 * human.vel.y )  );
+      human.pos = v2add( human.pos, V2( 1.1 * human.vel.x, 1.1 * human.vel.y ) );
     } 
 
     return human;
   }
-  
-  /*
-  dis.collide = function( human, rad ) {
-
-    let xmirrored = false;
-
-    if( dis.y0 < human.pos.y + rad && human.pos.y - rad < dis.y1 ) {
-
-      if( 0 < human.vel.x ) {
-
-        if( Math.abs( dis.x0 - human.pos.x ) < rad ) {
-
-          human.vel.x = - Math.abs( human.vel.x );
-
-          human.pos.x = 2 * ( dis.x0 - rad ) - human.pos.x;
-
-          xmirrored = true;
-        }
-      }
-      else
-      if( human.vel.x < 0 ) {
-
-        if( Math.abs( human.pos.x - dis.x1 ) < rad ) {
-
-          human.vel.x = + Math.abs( human.vel.x );
-
-          human.pos.x = 2 * ( dis.x1 + rad ) - human.pos.x;
-
-          xmirrored = true;
-        }
-      }
-    }
-
-    if( ! xmirrored )
-    if( dis.x0 < human.pos.x + rad && human.pos.x - rad < dis.x1 ) {
-
-      if( 0 < human.vel.y ) {
-
-        if( Math.abs( dis.y0 - human.pos.y ) < rad ) {
-
-          human.vel.y = - Math.abs( human.vel.y );
-
-          human.pos.y = 2 * ( dis.y0 - rad ) - human.pos.y;
-        }
-      }
-      else
-      if( human.vel.y < 0 ) {
-
-        if( Math.abs( human.pos.y - dis.y1 ) < rad ) {
-
-          human.vel.y = + Math.abs( human.vel.y );
-
-          human.pos.y = 2 * ( dis.y1 + rad ) - human.pos.y;
-        }
-      }
-    }
-
-    return human;
-  }
-  */
 }
+
 function sign( x ) {
 
   return x < 0 ? -1 : 0 < x ? 1 : 0;
-}
-
-function Human( pos, vel, acc, dis ) {
-
-  return {
-    pos : pos,
-    vel : vel,
-    acc : acc,
-    dis : dis
-  };
-}
-
-Display = function( cnvs_width, cnvs_height, disp_width, disp_height ) {
-
-  let dis = this;
-
-  dis.cnvs_width  = cnvs_width;
-  dis.cnvs_height = cnvs_height;
-  dis.disp_width  = disp_width;
-  dis.disp_height = disp_height;
-
-  dis.create = function( ) {
-
-    let
-    cdev = dis.cnvs_height / dis.cnvs_width,
-    ddev = dis.disp_height / dis.disp_width;
-
-    if( cdev < ddev ) {
-
-      dis.ad2c = dis.cnvs_height / dis.disp_height;
-
-      dis.off = V2( .5 * ( dis.cnvs_width - dis.ad2c * dis.disp_width ), 0 );
-
-    }
-    else {
-
-      dis.ad2c = dis.cnvs_width / dis.disp_width;
-
-      dis.off = V2( 0, .5 * ( dis.cnvs_height - dis.ad2c * dis.disp_height ) );
-    }
-
-    dis.ac2d = 1. / dis.ad2c;
-  };
-
-  dis.xd2c = function( x ) {
-
-    return dis.off.x + x * dis.ad2c;
-  }
-
-  dis.yd2c = function( y ) {
-
-    return dis.off.y + y * dis.ad2c;
-  }
-
-  dis.d2c = function( dp ) {
-
-    return V2( dis.xd2c( dp.x ), dis.yd2c( dp.y ) ) ;
-  }
-
-  dis.xc2d = function( x ) {
-
-    return ( x - dis.off.x ) * dis.ac2d;
-  }
-
-  dis.yc2d = function( y ) {
-
-    return ( y - dis.off.y ) * dis.ac2d;
-  }
-
-  dis.c2d = function( cp ) {
-
-    return V2( dis.xc2d( cp.x ), dis.yc2d( cp.y ) );
-  }
-
-  dis.create( );
 }
 
 function rand( ) {
@@ -237,128 +88,188 @@ function rand( ) {
   return Math.random( );
 }
 
-Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 500 ) {
+Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 500 ) {
 
-	let dis = this;
+	let o = this;
 
-  dis.cnvs         = document.getElementById ( cnvs_name );
-	dis.cnvs.width   = this.cnvs.clientWidth;
-	dis.cnvs.height  = this.cnvs.clientHeight;
-	dis.cntxt        = this.cnvs.getContext ( "2d" );
-	dis.cntxt.font   = "12pt Calibri";
-	dis.dsp          = new Display( dis.cnvs.width, dis.cnvs.height, 2, 1 );
-	dis.cnt_x        = count_of_humans_x;
-	dis.cnt_y        = count_of_humans_y;
-	dis.sicktime     = sicktime;
-	dis.rad          = radius;
-	dis.vel          = velocity;
-	dis.acc          = acceleration;
-	dis.hmn          = [ ];
-	dis.walls        = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
+  o.cnvs          = document.getElementById ( cnvs_name );
+	o.cnvs.width    = this.cnvs.clientWidth;
+	o.cnvs.height   = this.cnvs.clientHeight;
+	o.cntxt         = this.cnvs.getContext ( "2d" );
+	o.cntxt.font    = "12pt Calibri";
+	o.dsp           = new Display( o.cnvs.width, o.cnvs.height, 2, 1 );
+	o.cnt_x         = count_of_humans_x;
+	o.cnt_y         = count_of_humans_y;
+	o.sicktime      = sicktime;
+	o.rad           = radius;
+	o.vel           = velocity;
+  o.acc           = acceleration;
+  o.max_sicks     = .1 * count_of_humans_x * count_of_humans_y;
+	o.hmn           = [ ];
+	o.walls         = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
 	                     new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ];
 
-	dis.create = function( ) {
+	o.create = function( ) {
 
-	  for( let i = 0; i < dis.cnt_y; i ++ ) {
+    o.states = {
+      total     : count_of_humans_x * count_of_humans_y, 
+      sick      : {
+        treated   : 0,
+        untreated : 0
+      },
+      recovered : {
+        treated   : 0,
+        untreated : 0
+      },
+      dead      : {
+        treated   : 0,
+        untreated : 0
+      }
+    } 
 
-      let y = ( .5 + i ) / dis.cnt_y;
+    o.hmn = [ ];
 
-      for( let j = 0; j < dis.cnt_x; j ++ ) {
+	  for( let i = 0; i < o.cnt_y; i ++ ) {
+
+      let y = ( .5 + i ) / o.cnt_y;
+
+      for( let j = 0; j < o.cnt_x; j ++ ) {
 
         let
-        x = ( .5 + j ) / dis.cnt_x * dis.dsp.disp_width / dis.dsp.disp_height,
+        x = ( .5 + j ) / o.cnt_x * o.dsp.disp_width / o.dsp.disp_height,
         alpha = 6.28 * rand( );
 
-        dis.hmn.push( new Human( V2( x, y ), V2( dis.vel * Math.cos( alpha ), dis.vel * Math.sin( alpha ) ), V2( 0, 0 ), 0 ) );
+        o.hmn.push( new Human( V2( x, y ), V2( o.vel * Math.cos( alpha ), o.vel * Math.sin( alpha ) ), V2( 0, 0 ), 0, STATE.healthy ) );
       }
     }
 
-    dis.hmn[ Math.floor( dis.hmn.length * rand( ) ) ].dis = 1;
+    o.hmn[ Math.floor( o.hmn.length * rand( ) ) ].new_state( STATE.sick_treated );
+
+    o.states.sick.treated ++;
 	}
 
-	dis.fnt = function ( font ) {
+	o.fnt = function ( font ) {
 
-		dis.cntxt.font  = font;
+		o.cntxt.font  = font;
 	}
 
-	dis.fcol = function ( col1 = dis.fc1, col2 = dis.fc2 ) {
+	o.fcol = function ( col1 = o.fc1, col2 = o.fc2 ) {
 
-		dis.fc1 = col1;
-		dis.fc2 = col2;
+		o.fc1 = col1;
+		o.fc2 = col2;
 	}
 
-	dis.bcol = function ( col = dis.bcl ) {
+	o.bcol = function ( col = o.bcl ) {
 
-		dis.bcl = col;
+		o.bcl = col;
 
-		dis.cnvs.style.backgroundColor = this.bcl;
+		o.cnvs.style.backgroundColor = this.bcl;
 	}
 
-	dis.text = function ( txt, x, y ) {
+	o.text = function ( txt, x, y ) {
 
-		dis.cntxt.fillStyle = dis.fc1;
-		dis.cntxt.fillText( txt, x, y );
+		o.cntxt.fillStyle = o.fc1;
+		o.cntxt.fillText( txt, x, y );
 	}
 
-	dis.collide_each = function( h ) {
+	o.collide_each = function( h ) {
 
-    for( h2 of dis.hmn ) {
+    if( h.state == STATE.healthy ) {
 
-      if( h != h2 ) {
+      for( h2 of o.hmn ) {
 
-        let wdt = Math.abs( h2.pos.x - h.pos.x );
+        if( h != h2 ) {
 
-	      if( wdt < 2 * dis.rad ) {
+          let wdt = Math.abs( h2.pos.x - h.pos.x );
 
-	        let hgt = Math.abs( h2.pos.y - h.pos.y );
+          if( wdt < 2 * o.rad ) {
 
-    	    if( hgt < 2 * dis.rad ) {
+            let hgt = Math.abs( h2.pos.y - h.pos.y );
 
-	          let d2 = wdt * wdt + hgt * hgt;
+            if( hgt < 2 * o.rad ) {
 
-	          if( d2 < 4 * dis.rad * dis.rad ) {
+              let d2 = wdt * wdt + hgt * hgt;
 
-              if( 0 < h2.dis && h2.dis <= dis.sicktime && h.dis == 0 ) {
+              if( d2 < 4 * o.rad * o.rad ) {
 
-                h.dis  = 1;
+                if( h2.state == STATE.sick_treated || h2.state == STATE.sick_untreated && h.state == STATE.healthy ) {
+
+                  h.time = 0;
+
+                  if( o.states.sick.treated < o.max_sicks ) {
+
+                    h.new_state( STATE.sick_treated );
+                    o.states.sick.treated ++;
+                  }
+                  else {
+                  
+                    h.new_state( STATE.sick_untreated );
+                    o.states.sick.untreated ++;
+                  }
+                }
               }
-	          }
-    	    }
-	      }
+            }
+          }
+        }
 	    }
     }
 
     return h;
 	}
 
-	dis.collide_walls = function( h ) {
+	o.collide_walls = function( h ) {
 
-    for( w of dis.walls ) {
+    for( w of o.walls ) {
 
-      h = w.collide( h, dis.rad );
+      h = w.collide( h, o.rad );
     }
 
 	  return h;
 	}
 
-	dis.move = function( ) {
+	o.move = function( ) {
 
-	  for( let i = 0; i < dis.hmn.length; i ++ ) {
+	  for( let i = 0; i < o.hmn.length; i ++ ) {
 
-	    h = dis.hmn[ i ];
+      h = o.hmn[ i ];
+      
+      ++ h.time;
 
-  	  h.dis =
-  	    h.dis == 0
-  	    ? 0
-  	    : h.dis < dis.sicktime
-  	      ? h.dis + 1
-  	      : h.dis == dis.sicktime
-  	          ? Math.random( ) < .95
-  	            ? dis.sicktime + 1
-  	            : dis.sicktime + 2
-  	          : h.dis;
+      if( o.sicktime < h.time ) {
 
-      if( h.dis < dis.sicktime + 2 ) {
+        if( h.state == STATE.sick_treated ) {
+
+          if( Math.random( ) < .95 ) {
+
+            h.new_state( STATE.recovered_treated );
+            ++ o.states.recovered.treated;
+          }
+          else {
+
+            h.new_state( STATE.dead_treated );
+            ++ o.states.dead.treated;
+          }
+          -- o.states.sick.treated;
+        }
+        else if( h.state == STATE.sick_untreated ) {
+
+          if( Math.random( ) < .75 ) {
+
+            h.new_state( STATE.recovered_untreated );
+            ++ o.states.recovered.untreated;
+          }
+          else {
+
+            h.new_state( STATE.dead_untreated );
+            ++ o.states.dead_untreated;
+          }
+          -- o.states.sick.untreated;
+        }
+      }
+
+      console.log( h.state );
+
+      if( ( h.state != STATE.dead_treated && h.state != STATE.dead_untreated ) ) {
 
         h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x - .000001 * h.vel.x, .005 ), -.005 );
         h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y - .000001 * h.vel.y, .005 ), -.005 );
@@ -372,34 +283,34 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
       h.pos.x += h.vel.x;
 	    h.pos.y += h.vel.y;
 
-      h = dis.collide_walls( h );
+      h = o.collide_walls( h );
 
-	    dis.hmn[ i ] = dis.collide_each( h );
+	    o.hmn[ i ] = o.collide_each( h );
 	  }
 	}
 
-	dis.accelerate = function( ) {
+	o.accelerate = function( ) {
 
-	  for( let i = 0; i < dis.hmn.length; i ++ ) {
+	  for( let i = 0; i < o.hmn.length; i ++ ) {
 
-	    dis.hmn[ i ].acc = V2( 0, 0 );
+	    o.hmn[ i ].acc = V2( 0, 0 );
 	  }
 
-	  for( let i = 0; i < dis.hmn.length - 1; i ++ ) {
+	  for( let i = 0; i < o.hmn.length - 1; i ++ ) {
 
-	    h1 = dis.hmn[ i ];
+	    h1 = o.hmn[ i ];
 
-  	  for( let j = i + 1; j < dis.hmn.length; j ++ ) {
+  	  for( let j = i + 1; j < o.hmn.length; j ++ ) {
 
         if( i != j ) {
 
-	        h2 = dis.hmn[ j ];
+	        h2 = o.hmn[ j ];
 
 	        let
 	        d  = v2sub( h2.pos, h1.pos ),
 	        n  = 1. / v2abs( d );
 	        dn = V2( d.x * n, d.y * n ),
-	        a  = Math.min( dis.acc / ( d.y * d.y + d.x * d.x ), 1e-4 );
+	        a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-4 );
 
 	        //a *= Math.sqrt( a );
 
@@ -408,83 +319,62 @@ Pandemic = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 	        h2.acc.x += a * dn.x;
 	        h2.acc.y += a * dn.y;
 
-	        dis.hmn[ j ] = h2;
+	        o.hmn[ j ] = h2;
         }
 
-	      dis.hmn[ i ] = h1;
+	      o.hmn[ i ] = h1;
       }
 	  }
 	}
 
-	dis.draw = function ( ) {
+	o.draw = function ( ) {
 
-    dis.cnvs        = document.getElementById ( "cnvs" );
-	  dis.cnvs.width  = dis.cnvs.clientWidth;
-  	dis.cnvs.height = dis.cnvs.clientHeight;
+    o.cnvs        = document.getElementById ( "cnvs" );
+	  o.cnvs.width  = o.cnvs.clientWidth;
+  	o.cnvs.height = o.cnvs.clientHeight;
 
-  	dis.dsp = new Display( dis.cnvs.width, dis.cnvs.height, 2, 1 );
+  	o.dsp = new Display( o.cnvs.width, o.cnvs.height, 2, 1 );
 
-    dis.cntxt.fillStyle = "#404040";
+    o.cntxt.fillStyle = "#404040";
 
-    dis.cntxt.fillRect( 0, 0, dis.cnvs.width, dis.cnvs.height );
+    o.cntxt.fillRect( 0, 0, o.cnvs.width, o.cnvs.height );
 
-    dis.cntxt.fillStyle = "#606060";
+    o.cntxt.fillStyle = "#606060";
 
-	  for( w of dis.walls ) {
-
-	    let
-	    x0 = dis.dsp.xd2c( w.x0 ),
-	    x1 = dis.dsp.xd2c( w.x1 ),
-      y0 = dis.dsp.yd2c( w.y0 ),
-	    y1 = dis.dsp.yd2c( w.y1 );
-
-	    dis.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );
-	  }
-
-	  let r = dis.dsp.ad2c * dis.rad;
-
-    for( h of dis.hmn ) {
+	  for( w of o.walls ) {
 
 	    let
-	    p = dis.dsp.d2c( h.pos );
+	    x0 = o.dsp.xd2c( w.x0 ),
+	    x1 = o.dsp.xd2c( w.x1 ),
+      y0 = o.dsp.yd2c( w.y0 ),
+	    y1 = o.dsp.yd2c( w.y1 );
 
-	    dis.cntxt.strokeStyle = h.dis == 0 ? "#00ff00" : "#ff0000";
-
-	    dis.cntxt.beginPath( )
-	    dis.cntxt.arc( p.x, p.y, r, 0, 6.28 );
-      dis.cntxt.stroke( );
-	    dis.cntxt.fillStyle =
-	      h.dis == 0
-	      ? "#00ff00"
-	      : 0 < h.dis && h.dis <= dis.sicktime
-	        ? "#ff0000"
-	        : dis.sicktime + 1 == h.dis
-	          ? "#ffff40"
-	          : "#101010";
-
-	    dis.cntxt.fill( );
+	    o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );
 	  }
-	}
 
-	dis.state = function( ) {
+	  let r = o.dsp.ad2c * o.rad;
 
-    let
-    cnth = 0,
-    cnts = 0,
-    cntr = 0,
-    cntd = 0;
+    for( h of o.hmn ) {
 
-    for( h of dis.hmn ) {
+	    let
+	    p = o.dsp.d2c( h.pos );
 
-      if( h.dis == 0 ) cnth ++;
-      else if( 0 < h.dis && h.dis <= dis.sicktime ) cnts ++;
-      else if( dis.sicktime + 1 == h.dis ) cntr ++;
-      else cntd ++;
-    }
+	    o.cntxt.strokeStyle = "#fffff";
 
-    return [ cnth, cnts, cntr, cntd ];
-	};
+	    o.cntxt.beginPath( )
+	    o.cntxt.arc( p.x, p.y, r, 0, 6.28 );
+      o.cntxt.stroke( );
+	    o.cntxt.fillStyle = [
+        "#00ff00", 
+        "#ff0000", "#ff00ff", 
+        "#ffff00", "#ff8000", 
+        "#600000", "#600060"
+      ][ h.state ];
 
-	dis.create( );
+	    o.cntxt.fill( );
+	  }
+  }
+
+  o.create( );
 }
 

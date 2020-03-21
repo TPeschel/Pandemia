@@ -4,87 +4,66 @@
 		<title>
 			PANDEMIC DISEASE SIMULATIONS
 		</title>
+		<script src="v2.js" type="text/javascript"></script>
 		<script src="iterasures.js" type="text/javascript"></script>
+		<script src="display.js" type="text/javascript"></script>
 		<script src="plot2d.js" type="text/javascript"></script>
 		<script src="pandemia.js" type="text/javascript"></script>
-		<!-- <link rel="stylesheet" type="text/css" href="corona.css"> -->
-		<style>
-			body {
-				background-color : #383838;
-				color : #a0a0a0;
-			}
-		  canvas {
-				background-color : #ffffff;
-				border: 1px solid black;
-				padding: 5px;
-				width:99%;
-				height:94%;
-				border-spacing: 15px;
-				text-align: center;
-				position: relative;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="pandemia.css">
 	</head>
 	<body>
 		<p>
 		  PANDEMIC DISEASE SIMULATIONS
 		</p>
-	  <div>
-	    <canvas id="cnvs">
-	      no html 5 supported
-  	  </canvas>
-	  </div>
+		<div>
+	    	<canvas id="cnvs">
+				no html 5 supported
+			</canvas>
+		</div>
 		<script type="text/javascript">
+		
+			let
+			pan = new Pandemia( "cnvs", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .002, acceleration = 1.e-7, sicktime = 1000 );
 
-		  let
-		  pan = new Pandemic( "cnvs", count_of_humans_x = 14, count_of_humans_y = 7, radius = .020, velocity = .0011, acceleration = 1.e-7, sicktime = 1000 );
-
-		  let
-		  t_id = 0,
-		  st = 200.
-		  t    = [ ],
-		  heal = [ ],
-		  sick = [ ],
-		  reco = [ ],
-		  dead = [ ],
 			updt = function ( ) {
 
-		    if( 0 < pan.state( )[ 1 ] )
+		    	if( 0 < pan.states.sick.treated + pan.states.sick.untreated ) {
 
-  				requestAnimationFrame ( updt );
+  					requestAnimationFrame ( updt );
 
-				updPan ( );
+					updPan ( );
+				}
 			},
 
-		  pan.bcol ( "#404040", "202020");
-
+			pan.bcol ( "#404040", "202020");
+			
 			pan.fcol ( "#808080", "#606060" );
+			
+			pan.fnt ( "12pt Calibri" );
 
-	    pan.fnt ( "12pt Calibri" );
+			updPan = function ( ) {
 
-		  updPan = function ( ) {
+				pan.accelerate( );
 
-		    pan.accelerate( );
+		    	pan.move( );
 
-		    pan.move( );
-
-        let
-		    state = pan.state( );
-
+        	// let
+		    // state = pan.state( );
+/*
 		    t.push( 0 < t.length ? t[ t.length - 1 ] + 1 : 0 );
 		    heal.push( state[ 0 ] );
 		    sick.push( state[ 1 ] );
 		    reco.push( state[ 2 ] );
 		    dead.push( state[ 3 ] );
+*/
+		    // let
+		    // nul = arr( heal.length ),
+        	// top = arr( heal.length, cst( pan.hmn.length + 10 ) ),
+        	// sr = rel( rAdd, sick, reco ),
+		    // srd = rel( rAdd, sr, dead ),
+		    // srdh = rel( rAdd, srd, heal );
 
-		    let
-		    nul = arr( heal.length ),
-        	top = arr( heal.length, cst( pan.hmn.length + 10 ) ),
-        	sr = rel( rAdd, sick, reco ),
-		    srd = rel( rAdd, sr, dead ),
-		    srdh = rel( rAdd, srd, heal );
-
-		    t_id = t_id < 10. * st ? t_id + 1 : 0;
+		    // t_id = t_id < 10. * st ? t_id + 1 : 0;
 
 /*		    d = document.getElementById( "lout1" );
 
@@ -94,7 +73,7 @@
 
 		    d.innerHTML = "healthy: " + state[ 0 ].toString( ) + "<br>sick:" + state[ 1 ].toString( ) + "<br>recovered: " + state[ 2 ].toString( ) + "<br>dead: " + state[ 3 ].toString( );
 */
-    	    plot2d = new Plot2d( "cnvs" );
+/*    	    plot2d = new Plot2d( "cnvs" );
 
 		    plot2d.bcol ( "#808080" );
 
@@ -119,9 +98,9 @@
 	        plot2d.fcol ( "#a0a0a0", "#f0f0f0" );
 			plot2d.fnt ( "12pt Calibri" );
 				//plot2d.grid ( );
-
+*/
         pan.draw ( );
-				plot2d.draw ( );
+//				plot2d.draw ( );
       };
 
 		requestAnimationFrame ( updt );
