@@ -83,15 +83,11 @@ function sign( x ) {
   return x < 0 ? -1 : 0 < x ? 1 : 0;
 }
 
-function rand( ) {
+Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10, radius = .05, velocity = .0015, acceleration = 1.e-8, sicktime = 500, seed = 20 ) {
 
-  return Math.random( );
-}
-
-Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, radius = .01, velocity = .001, acceleration = 1.e-8, sicktime = 500 ) {
-
-	let o = this;
-
+  let o = this;
+  
+  o.rng           = new RNG( seed ),
   o.cnvs          = document.getElementById ( cnvs_name );
 	o.cnvs.width    = this.cnvs.clientWidth;
 	o.cnvs.height   = this.cnvs.clientHeight;
@@ -107,7 +103,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
   o.max_sicks     = .1 * count_of_humans_x * count_of_humans_y;
 	o.hmn           = [ ];
 	o.walls         = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
-	                     new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ];
+	                    new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ) ]//, new Wall( .1, .475, 1.9, .525 ) ];
 
 	o.create = function( ) {
 
@@ -131,21 +127,21 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
 	  for( let i = 0; i < o.cnt_y; i ++ ) {
 
-      let y = ( .5 + i ) / o.cnt_y;
+      let y = ( 1.5 + i ) / ( o.cnt_y + 2 );
 
       for( let j = 0; j < o.cnt_x; j ++ ) {
 
         let
-        x = ( .5 + j ) / o.cnt_x * o.dsp.disp_width / o.dsp.disp_height,
-        alpha = 6.28 * rand( );
+        x = ( 1.5 + j ) / ( o.cnt_x + 2 ) * o.dsp.disp_width / o.dsp.disp_height,
+        alpha = 6.28 * o.rng.nextFloat( );
 
         o.hmn.push( new Human( V2( x, y ), V2( o.vel * Math.cos( alpha ), o.vel * Math.sin( alpha ) ), V2( 0, 0 ), 0, STATE.healthy ) );
       }
     }
 
-    o.hmn[ Math.floor( o.hmn.length * rand( ) ) ].new_state( STATE.sick_treated );
+    o.hmn[ Math.floor( o.hmn.length * o.rng.nextFloat( ) ) ].new_state( STATE.sick_treated );
 
-    o.states.sick.treated ++;
+    o.states.sick.treated = 1;
 	}
 
 	o.fnt = function ( font ) {
@@ -199,12 +195,12 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
                   if( o.states.sick.treated < o.max_sicks ) {
 
                     h.new_state( STATE.sick_treated );
-                    o.states.sick.treated ++;
+                    ++ o.states.sick.treated;
                   }
                   else {
                   
                     h.new_state( STATE.sick_untreated );
-                    o.states.sick.untreated ++;
+                    ++ o.states.sick.untreated;
                   }
                 }
               }
@@ -239,7 +235,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
         if( h.state == STATE.sick_treated ) {
 
-          if( Math.random( ) < .95 ) {
+          if( o.rng.nextFloat( ) < .95 ) {
 
             h.new_state( STATE.recovered_treated );
             ++ o.states.recovered.treated;
@@ -249,11 +245,12 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
             h.new_state( STATE.dead_treated );
             ++ o.states.dead.treated;
           }
+
           -- o.states.sick.treated;
         }
         else if( h.state == STATE.sick_untreated ) {
 
-          if( Math.random( ) < .75 ) {
+          if( o.rng.nextFloat( ) < .75 ) {
 
             h.new_state( STATE.recovered_untreated );
             ++ o.states.recovered.untreated;
@@ -261,13 +258,12 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
           else {
 
             h.new_state( STATE.dead_untreated );
-            ++ o.states.dead_untreated;
+            ++ o.states.dead.untreated;
           }
+
           -- o.states.sick.untreated;
         }
       }
-
-      console.log( h.state );
 
       if( ( h.state != STATE.dead_treated && h.state != STATE.dead_untreated ) ) {
 
@@ -278,6 +274,12 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
         h.vel.x = 0;
         h.vel.y = 0;
+      }
+
+      if( h.state == STATE.sick_treated ) {
+
+        h.vel.x *= .95;
+        h.vel.y *= .95;        
       }
 
       h.pos.x += h.vel.x;
@@ -314,10 +316,16 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
 
 	        //a *= Math.sqrt( a );
 
-	        h1.acc.x -= a * dn.x;
-	        h1.acc.y -= a * dn.y;
-	        h2.acc.x += a * dn.x;
-	        h2.acc.y += a * dn.y;
+/*
+	        h1.acc.x -= ( h1.state == STATE.sick_treated ? 2. : 1. ) * a * dn.x;
+	        h1.acc.y -= ( h1.state == STATE.sick_treated ? 2. : 1. ) * a * dn.y;
+	        h2.acc.x += ( h2.state == STATE.sick_treated ? 2. : 1. ) * a * dn.x;
+	        h2.acc.y += ( h2.state == STATE.sick_treated ? 2. : 1. ) * a * dn.y;
+*/
+          h1.acc.x -= a * dn.x;
+          h1.acc.y -= a * dn.y;
+          h2.acc.x += a * dn.x;
+          h2.acc.y += a * dn.y;
 
 	        o.hmn[ j ] = h2;
         }
@@ -366,9 +374,9 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 10, count_of_humans_y = 5, 
       o.cntxt.stroke( );
 	    o.cntxt.fillStyle = [
         "#00ff00", 
-        "#ff0000", "#ff00ff", 
-        "#ffff00", "#ff8000", 
-        "#600000", "#600060"
+        "#0000ff", "#ff0000",
+        "#0080ff", "#ff8000", 
+        "#002060", "#602000"
       ][ h.state ];
 
 	    o.cntxt.fill( );
