@@ -4,7 +4,7 @@ body {
     color            : #a0a0a0;
 }
 
-canvas {
+.cnvs {
 
 	background-color : #404040;
 	display          : block;
@@ -13,6 +13,19 @@ canvas {
     padding          : 5px;
     width            : 99%;
     height           : 94% ;
+    text-align       : center;
+    position         : relative;
+}
+
+.hist {
+
+	background-color : #404040;
+	display          : block;
+    border           : 1px solid black;
+    border-spacing   : 15px;
+    padding          : 5px;
+    width            : 99%;
+    height           : 20% ;
     text-align       : center;
     position         : relative;
 }

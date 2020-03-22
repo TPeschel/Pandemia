@@ -452,7 +452,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
   o.do = function( ) {
 
-    ++ o.time_cnt;
+    o.time_cnt = o.time_cnt < 10000 ? o.time_cnt + 1 : 0;
 
     o.upd_states( );
     o.accelerate( );
