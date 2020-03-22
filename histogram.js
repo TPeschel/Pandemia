@@ -45,9 +45,9 @@ Histogram = function ( cnvs_name, max_x, max_y ) {
         s += states.sick.untreated; y.push( s );
         s += states.recovered.treated; y.push( s );
         s += states.recovered.untreated; y.push( s );
+        s += states.healthy; y.push( s );
         s += states.dead.treated; y.push( s );
         s += states.dead.untreated; y.push( s );
-        s += states.healthy; y.push( s );
 
         o.y.push( y );
     }
@@ -70,8 +70,8 @@ Histogram = function ( cnvs_name, max_x, max_y ) {
                 o.cntxt.fillStyle = [
                     "#0000ff", "#ff0000",
                     "#0080ff", "#ff8000",
-                    "#002060", "#602000", 
-                    "#00ff00"
+                    "#00ff00",
+                    "#002060", "#602000"
                   ][ j ];
                   
                 o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );            
