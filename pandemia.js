@@ -83,7 +83,7 @@ function sign( x ) {
   return x < 0 ? -1 : 0 < x ? 1 : 0;
 }
 
-Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10, radius = .05, velocity = .0015, acceleration = 1.e-8, sicktime = 500, seed = 20 ) {
+Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10, radius = .05, velocity = .0015, acceleration = 1.e-8, sicktime = 500, seed = 20, add_walls = [ ] ) {
 
   let o = this;
   
@@ -103,10 +103,16 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
   o.max_sicks     = .1 * count_of_humans_x * count_of_humans_y;
   o.time_cnt      = 0;
 	o.hmn           = [ ];
-	o.walls         = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
-	                    new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ];
+	o.walls         = [ ];
 
 	o.create = function( ) {
+
+    o.walls = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ) ];
+
+    for( w of add_walls ) {
+
+      o.walls.push( w );
+    }
 
     o.time_cnt = 0;
 	  o.states = {
