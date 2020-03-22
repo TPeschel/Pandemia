@@ -103,7 +103,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
   o.max_sicks     = .1 * count_of_humans_x * count_of_humans_y;
 	o.hmn           = [ ];
 	o.walls         = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ),
-	                    new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ) ]//, new Wall( .1, .475, 1.9, .525 ) ];
+	                    new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ];
 
 	o.create = function( ) {
 
@@ -309,25 +309,29 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 	        h2 = o.hmn[ j ];
 
 	        let
-	        d  = v2sub( h2.pos, h1.pos ),
-	        n  = 1. / v2abs( d );
-	        dn = V2( d.x * n, d.y * n ),
-	        a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-4 );
+          d  = v2sub( h2.pos, h1.pos ),
+          d2 = v2abs( d );
+          
+          if( d2 < .1 ) {
+            n  = 1. / v2abs( d );
+            dn = V2( d.x * n, d.y * n ),
+            a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-4 );
 
-	        //a *= Math.sqrt( a );
+            //a *= Math.sqrt( a );
 
-/*
-	        h1.acc.x -= ( h1.state == STATE.sick_treated ? 2. : 1. ) * a * dn.x;
-	        h1.acc.y -= ( h1.state == STATE.sick_treated ? 2. : 1. ) * a * dn.y;
-	        h2.acc.x += ( h2.state == STATE.sick_treated ? 2. : 1. ) * a * dn.x;
-	        h2.acc.y += ( h2.state == STATE.sick_treated ? 2. : 1. ) * a * dn.y;
-*/
-          h1.acc.x -= a * dn.x;
-          h1.acc.y -= a * dn.y;
-          h2.acc.x += a * dn.x;
-          h2.acc.y += a * dn.y;
+  /*
+            h1.acc.x -= ( h1.state == STATE.sick_treated ? 2. : 1. ) * a * dn.x;
+            h1.acc.y -= ( h1.state == STATE.sick_treated ? 2. : 1. ) * a * dn.y;
+            h2.acc.x += ( h2.state == STATE.sick_treated ? 2. : 1. ) * a * dn.x;
+            h2.acc.y += ( h2.state == STATE.sick_treated ? 2. : 1. ) * a * dn.y;
+  */
+            h1.acc.x -= a * dn.x;
+            h1.acc.y -= a * dn.y;
+            h2.acc.x += a * dn.x;
+            h2.acc.y += a * dn.y;
 
-	        o.hmn[ j ] = h2;
+            o.hmn[ j ] = h2;
+          }
         }
 
 	      o.hmn[ i ] = h1;
@@ -337,7 +341,6 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
 	o.draw = function ( ) {
 
-    o.cnvs        = document.getElementById ( "cnvs" );
 	  o.cnvs.width  = o.cnvs.clientWidth;
   	o.cnvs.height = o.cnvs.clientHeight;
 
@@ -381,6 +384,18 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
 	    o.cntxt.fill( );
 	  }
+  }
+
+  o.finished = function( ) {
+
+    return o.states.sick_treated + o.states.sick_untreated == 0;
+  }
+
+  o.do = function( ) {
+
+    o.accelerate( );
+    o.move( );
+    o.draw ( );
   }
 
   o.create( );
