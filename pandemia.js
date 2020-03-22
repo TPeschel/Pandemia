@@ -103,7 +103,23 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
   o.max_sicks     = .1 * count_of_humans_x * count_of_humans_y;
   o.time_cnt      = 0;
 	o.hmn           = [ ];
-	o.walls         = [ ];
+  o.walls         = [ ];
+  o.states        = {
+    total     : count_of_humans_x * count_of_humans_y, 
+    healthy   : 0,
+    sick      : {
+      treated   : 0,
+      untreated : 0
+    },
+    recovered : {
+      treated   : 0,
+      untreated : 0
+    },
+    dead      : {
+      treated   : 0,
+      untreated : 0
+    }
+  };
 
 	o.create = function( ) {
 
@@ -115,22 +131,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
     }
 
     o.time_cnt = 0;
-	  o.states = {
-      total     : count_of_humans_x * count_of_humans_y, 
-      sick      : {
-        treated   : 0,
-        untreated : 0
-      },
-      recovered : {
-        treated   : 0,
-        untreated : 0
-      },
-      dead      : {
-        treated   : 0,
-        untreated : 0
-      }
-    } 
-
+    
     o.hmn = [ ];
 
 	  for( let i = 0; i < o.cnt_y; i ++ ) {
@@ -149,7 +150,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
     o.hmn[ Math.floor( o.hmn.length * o.rng.nextFloat( ) ) ].new_state( STATE.sick_treated );
 
-    o.states.sick.treated = 1;
+    o.upd_states( );
 	}
 
 	o.fnt = function ( font ) {
@@ -203,12 +204,12 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
                   if( o.states.sick.treated < o.max_sicks ) {
 
                     h.new_state( STATE.sick_treated );
-                    ++ o.states.sick.treated;
+//                    ++ o.states.sick.treated;
                   }
                   else {
                   
                     h.new_state( STATE.sick_untreated );
-                    ++ o.states.sick.untreated;
+//                    ++ o.states.sick.untreated;
                   }
                 }
               }
@@ -246,30 +247,30 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
           if( o.rng.nextFloat( ) < .95 ) {
 
             h.new_state( STATE.recovered_treated );
-            ++ o.states.recovered.treated;
+//            ++ o.states.recovered.treated;
           }
           else {
 
             h.new_state( STATE.dead_treated );
-            ++ o.states.dead.treated;
+//            ++ o.states.dead.treated;
           }
 
-          -- o.states.sick.treated;
+//          -- o.states.sick.treated;
         }
         else if( h.state == STATE.sick_untreated ) {
 
           if( o.rng.nextFloat( ) < .75 ) {
 
             h.new_state( STATE.recovered_untreated );
-            ++ o.states.recovered.untreated;
+//            ++ o.states.recovered.untreated;
           }
           else {
 
             h.new_state( STATE.dead_untreated );
-            ++ o.states.dead.untreated;
+//            ++ o.states.dead.untreated;
           }
 
-          -- o.states.sick.untreated;
+//          -- o.states.sick.untreated;
         }
       }
 
@@ -391,14 +392,8 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
     o.cntxt.font    = "16pt Calibri";
 
-    let
-    healthy = o.states.total -
-      o.states.sick.treated - o.states.sick.untreated -
-      o.states.recovered.treated - o.states.recovered.untreated -
-      o.states.dead.treated - o.states.dead.untreated;
-
     o.cntxt.fillStyle = "#00ff00";
-    o.text( "HEALTHY: " + healthy, 50, 50 );
+    o.text( "HEALTHY: " + o.states.healthy, 50, 50 );
     
     o.cntxt.fillStyle = "#0000ff";
     o.text( "SICKS TREATED: " + o.states.sick.treated, 50, 70 )
@@ -422,10 +417,44 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
     return o.states.sick.treated + o.states.sick.untreated == 0;
   }
 
+  o.upd_states = function( ) {
+
+	  o.states = {
+      total     : o.hmn.length, 
+      healthy   : 0,
+      sick      : {
+        treated   : 0,
+        untreated : 0
+      },
+      recovered : {
+        treated   : 0,
+        untreated : 0
+      },
+      dead      : {
+        treated   : 0,
+        untreated : 0
+      }
+    } 
+
+    for( let h of o.hmn ) {
+
+      if( h.state == STATE.healthy ) ++ o.states.healthy;
+      if( h.state == STATE.sick_treated ) ++ o.states.sick.treated;
+      if( h.state == STATE.sick_untreated ) ++ o.states.sick.untreated;
+      if( h.state == STATE.recovered_treated ) ++ o.states.recovered.treated;
+      if( h.state == STATE.recovered_untreated ) ++ o.states.recovered.untreated;
+      if( h.state == STATE.dead_treated ) ++ o.states.dead.treated;
+      if( h.state == STATE.dead_untreated ) ++ o.states.dead.untreated;
+    }
+
+    return o.states;
+  }
+
   o.do = function( ) {
 
     ++ o.time_cnt;
 
+    o.upd_states( );
     o.accelerate( );
     o.move( );
     o.draw ( );
