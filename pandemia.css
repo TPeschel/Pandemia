@@ -19,13 +19,13 @@ body {
 
 .hist {
 
-	background-color : #404040;
+	background-color : #808080;
 	display          : block;
     border           : 1px solid black;
     border-spacing   : 15px;
     padding          : 5px;
     width            : 99%;
-    height           : 20% ;
+    height           : 30% ;
     text-align       : center;
     position         : relative;
 }

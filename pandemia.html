@@ -22,6 +22,11 @@
 			</canvas>
 		</div>
 		<div>
+			<div>
+				<p id="info1">
+					
+				</p>
+			</div>
 	    	<canvas class = "hist", id="histo1">
 				no html 5 supported
 			</canvas>
@@ -32,6 +37,11 @@
 			</canvas>
 		</div>
 		<div>
+			<div>
+				<p id="info2">
+					
+				</p>
+			</div>
 	    	<canvas class = "hist", id="histo2">
 				no html 5 supported
 			</canvas>
@@ -42,6 +52,11 @@
 			</canvas>
 		</div>
 		<div>
+			<div>
+				<p id="info3">
+					
+				</p>
+			</div>
 	    	<canvas class = "hist", id="histo3">
 				no html 5 supported
 			</canvas>
@@ -52,27 +67,48 @@
 			</canvas>
 		</div>
 		<div>
+			<div>
+				<p id="info4">
+					
+				</p>
+			</div>
 	    	<canvas class = "hist", id="histo4">
 				no html 5 supported
 			</canvas>
 		</div>
 		<script type="text/javascript">
 		
-		let
-			add_walls = [ new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ];
+			let
+			colors = { 
+				healthy : "#00ff00",
+				sick : {
+					treated : "#0000ff",
+					untreated : "#ff0000"
+				},
+				recovered : {
+					treated : "#6060ff",
+					untreated : "#ff6060"
+				},
+				dead : {
+					treated : "#00007f",
+					untreated : "#7f0000"
+				}
+			},
+
+			walls = [ new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ],
 
 			pans = [
-				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .005, acceleration = 4.e-8, sicktime = 500, seed = 23, add_walls = add_walls ),
-				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .005, acceleration = 3.e-8, sicktime = 500, seed = 23 ),
-				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .003, acceleration = 2.e-8, sicktime = 500, seed = 23, add_walls = add_walls ),
-				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .003, acceleration = 1.e-8, sicktime = 500, seed = 23 ) 
+				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .005, acceleration = 4.e-8, sicktime = 500, seed = 23, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .005, acceleration = 3.e-8, sicktime = 500, seed = 23, addwalls = walls, colors = colors ),
+				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .003, acceleration = 2.e-8, sicktime = 500, seed = 23, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .003, acceleration = 1.e-8, sicktime = 500, seed = 23, addwalls = walls, colors = colors )
 			],
 
 			hist = [ 
-				new Histogram( "histo1", 2000, pans[ 0 ].hmn.length ),
-				new Histogram( "histo2", 2000, pans[ 1 ].hmn.length ),
-				new Histogram( "histo3", 2000, pans[ 2 ].hmn.length ),
-				new Histogram( "histo4", 2000, pans[ 3 ].hmn.length )
+				new Histogram( "histo1", 1000, pans[ 0 ].hmn.length, colors ),
+				new Histogram( "histo2", 1000, pans[ 1 ].hmn.length, colors ),
+				new Histogram( "histo3", 1000, pans[ 2 ].hmn.length, colors ),
+				new Histogram( "histo4", 1000, pans[ 3 ].hmn.length, colors )
 			],
 
 			updt = [ ];
@@ -86,14 +122,24 @@
 
 							requestAnimationFrame ( updt[ i ] );
 
+							document.getElementById( "info" + ( i + 1 ) ).innerHTML = 
+							"Total: " + pans[ i ].hmn.length + 
+							"<br>Gesunde: " + pans[ i ].states.healthy +
+							"<br>Infizierte innerhalb des Gesundheitswesens: " + pans[ i ].states.sick.treated +
+							"<br>Infizierte ausserhalb des Gesundheitswesens: " + pans[ i ].states.sick.untreated +
+							"<br>Geheilte innerhalb des Gesundheitswesens: " + pans[ i ].states.recovered.treated +
+							"<br>Geheilte ausserhalb des Gesundheitswesens: " + pans[ i ].states.recovered.untreated +
+							"<br>Tote innerhalb des Gesundheitswesens:" + pans[ i ].states.dead.treated +
+							"<br>Tote ausserhalb des Gesundheitswesens:" + pans[ i ].states.dead.untreated;
+							
 							pans[ i ].do( );
 
-							//if( pans[ i ].time_cnt & 0x7 == 0x7 ) {
-
-								hist[ i ].add( pans[ i ].time_cnt, pans[ i ].states );
-								
+							if( pans[ i ].time_cnt & 0x3 == 0x3 ) {
+							
+								hist[ i ].add( pans[ i ].time_cnt >> 2, pans[ i ].states );
+							
 								hist[ i ].plot( );
-							//}
+							}
 						}
 					}
 				)

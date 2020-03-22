@@ -83,7 +83,24 @@ function sign( x ) {
   return x < 0 ? -1 : 0 < x ? 1 : 0;
 }
 
-Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10, radius = .05, velocity = .0015, acceleration = 1.e-8, sicktime = 500, seed = 20, add_walls = [ ] ) {
+Pandemia = function ( 
+  cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
+  radius = .05, velocity = .0015, acceleration = 1.e-8, sicktime = 500, seed = 20, addwalls = [ ],
+  colors = { 
+    healthy : "#00ff00",
+    sick : {
+      treated : "#0000ff",
+      untreated : "#ff0000",
+    },
+    recovered : {
+      treated : "#6060ff",
+      untreated : "#ff6060",
+    },
+    dead : {
+      treated : "#00007f",
+      untreated : "#7f0000",
+    }
+  } ) {
 
   let o = this;
   
@@ -103,7 +120,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
   o.max_sicks     = .1 * count_of_humans_x * count_of_humans_y;
   o.time_cnt      = 0;
 	o.hmn           = [ ];
-  o.walls         = [ ];
+  o.walls = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ) ];
   o.states        = {
     total     : count_of_humans_x * count_of_humans_y, 
     healthy   : 0,
@@ -121,11 +138,11 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
     }
   };
 
-	o.create = function( ) {
+  o.colors = colors;
 
-    o.walls = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ) ];
+	o.create = function( addwalls ) {
 
-    for( w of add_walls ) {
+    for( w of addwalls ) {
 
       o.walls.push( w );
     }
@@ -204,12 +221,10 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
                   if( o.states.sick.treated < o.max_sicks ) {
 
                     h.new_state( STATE.sick_treated );
-//                    ++ o.states.sick.treated;
                   }
                   else {
                   
                     h.new_state( STATE.sick_untreated );
-//                    ++ o.states.sick.untreated;
                   }
                 }
               }
@@ -244,33 +259,25 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
         if( h.state == STATE.sick_treated ) {
 
-          if( o.rng.nextFloat( ) < .95 ) {
+          if( o.rng.nextFloat( ) < .85 ) {
 
             h.new_state( STATE.recovered_treated );
-//            ++ o.states.recovered.treated;
           }
           else {
 
             h.new_state( STATE.dead_treated );
-//            ++ o.states.dead.treated;
           }
-
-//          -- o.states.sick.treated;
         }
         else if( h.state == STATE.sick_untreated ) {
 
           if( o.rng.nextFloat( ) < .75 ) {
 
             h.new_state( STATE.recovered_untreated );
-//            ++ o.states.recovered.untreated;
           }
           else {
 
             h.new_state( STATE.dead_untreated );
-//            ++ o.states.dead.untreated;
           }
-
-//          -- o.states.sick.untreated;
         }
       }
 
@@ -381,15 +388,15 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 	    o.cntxt.arc( p.x, p.y, r, 0, 6.28 );
       o.cntxt.stroke( );
 	    o.cntxt.fillStyle = [
-        "#00ff00", 
-        "#0000ff", "#ff0000",
-        "#0080ff", "#ff8000", 
-        "#002060", "#602000"
+        o.colors.healthy, 
+        o.colors.sick.treated, o.colors.sick.untreated,
+        o.colors.recovered.treated, o.colors.recovered.untreated,
+        o.colors.dead.treated, o.colors.dead.untreated
       ][ h.state ];
 
 	    o.cntxt.fill( );
     }
-
+/*
     o.cntxt.font    = "16pt Calibri";
 
     o.cntxt.fillStyle = "#00ff00";
@@ -410,6 +417,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
     o.text( "DEADS TREATED: " + o.states.dead.treated, 50, 150 );
     o.cntxt.fillStyle = "#602000";
     o.text( "DEADS UNTREATED: " + o.states.dead.untreated, 50, 170 );
+    */
   }
 
   o.finished = function( ) {
@@ -452,7 +460,7 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
 
   o.do = function( ) {
 
-    o.time_cnt = o.time_cnt < 2000 ? o.time_cnt + 1 : 0;
+    o.time_cnt = o.time_cnt < 4000 ? o.time_cnt + 1 : 0;
 
     o.upd_states( );
     o.accelerate( );
@@ -460,6 +468,6 @@ Pandemia = function ( cnvs_name, count_of_humans_x = 20, count_of_humans_y = 10,
     o.draw ( );
   }
 
-  o.create( );
+  o.create( addwalls );
 }
 

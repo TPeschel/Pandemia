@@ -17,8 +17,7 @@ Display = function( cnvs_width, cnvs_height, disp_width, disp_height ) {
   
         dis.ad2c = dis.cnvs_height / dis.disp_height;
   
-        dis.off = V2( .5 * ( dis.cnvs_width - dis.ad2c * dis.disp_width ), 0 );
-  
+        dis.off = V2( .5 * ( dis.cnvs_width - dis.ad2c * dis.disp_width ), 0 );  
       }
       else {
   
