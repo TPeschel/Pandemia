@@ -122,16 +122,6 @@
 
 							requestAnimationFrame ( updt[ i ] );
 
-							document.getElementById( "info" + ( i + 1 ) ).innerHTML = 
-							"Total: " + pans[ i ].hmn.length + 
-							"<br>Gesunde: " + pans[ i ].states.healthy +
-							"<br>Infizierte innerhalb des Gesundheitswesens: " + pans[ i ].states.sick.treated +
-							"<br>Infizierte ausserhalb des Gesundheitswesens: " + pans[ i ].states.sick.untreated +
-							"<br>Geheilte innerhalb des Gesundheitswesens: " + pans[ i ].states.recovered.treated +
-							"<br>Geheilte ausserhalb des Gesundheitswesens: " + pans[ i ].states.recovered.untreated +
-							"<br>Tote innerhalb des Gesundheitswesens: " + pans[ i ].states.dead.treated +
-							"<br>Tote ausserhalb des Gesundheitswesens: " + pans[ i ].states.dead.untreated;
-							
 							pans[ i ].do( );
 
 							if( pans[ i ].time_cnt & 0x3 == 0x3 ) {
@@ -140,6 +130,16 @@
 							
 								hist[ i ].plot( );
 							}
+							
+							document.getElementById( "info" + ( i + 1 ) ).innerHTML = 
+							"Total: " + pans[ i ].hmn.length + 
+							"<br>Gesunde: " + pans[ i ].states.healthy +
+							"<br>Infizierte innerhalb des Gesundheitswesens: " + pans[ i ].states.sick.treated +
+							"<br>Infizierte ausserhalb des Gesundheitswesens: " + pans[ i ].states.sick.untreated +
+							"<br>Geheilte innerhalb des Gesundheitswesens: " + pans[ i ].states.recovered.treated +
+							"<br>Geheilte ausserhalb des Gesundheitswesens: " + pans[ i ].states.recovered.untreated +
+							"<br>Tote innerhalb des Gesundheitswesens: " + pans[ i ].states.dead.treated +
+							"<br>Tote ausserhalb des Gesundheitswesens: " + pans[ i ].states.dead.untreated;							
 						}
 					}
 				)
