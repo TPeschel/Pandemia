@@ -16,66 +16,83 @@ Histogram = function (
     }
   } ) {
 
-    let o = this;
+  let o = this;
 
-    o.cnvs        = document.getElementById ( cnvs_name );
-    o.cntxt       = o.cnvs.getContext ( "2d" );
-    o.cnvs.width  = o.cnvs.clientWidth;
-    o.cnvs.height = o.cnvs.clientHeight;
-    o.max_x       = max_x;
-    o.max_y       = max_y;
-    o.dsp         = new Display( o.cnvs.width, o.cnvs.height, max_x, max_y );
-    o.cntxt.font  = "12pt Calibri";
-    o.colors      = colors;
+  o.cnvs        = document.getElementById ( cnvs_name );
+  o.cntxt       = o.cnvs.getContext ( "2d" );
+  o.cnvs.width  = o.cnvs.clientWidth;
+  o.cnvs.height = o.cnvs.clientHeight;
+  o.max_x       = max_x;
+  o.max_y       = max_y;
+  o.dsp         = new Display( o.cnvs.width, o.cnvs.height, max_x, max_y );
+  o.cntxt.font  = "12pt Calibri";
+  o.colors      = colors;
+  
+  o.x = [ ];
+  o.y = [ ];
+
+  o.add = function( states ) {
+
+    let
+    s = 0,
+    yn = [ 
+      s, 
+      s += states.sick.treated,
+      s += states.sick.untreated,
+      s += states.recovered.treated,
+      s += states.recovered.untreated,
+      s += states.healthy,
+      s += states.dead.treated,
+      s += states.dead.untreated 
+    ];
     
-    o.x = [ ];
-    o.y = [ ];
+    if( o.x.length < 1 ) {
 
-    o.add = function( x, states ) {
+      o.x = [ 0 ];
+      o.y = [ yn ];
 
-        o.x.push( x );
-
-        let 
-        s = 0,
-        y = [ ];
-
-        y.push( s );
-
-        s += states.sick.treated; y.push( s );
-        s += states.sick.untreated; y.push( s );
-        s += states.recovered.treated; y.push( s );
-        s += states.recovered.untreated; y.push( s );
-        s += states.healthy; y.push( s );
-        s += states.dead.treated; y.push( s );
-        s += states.dead.untreated; y.push( s );
-
-        o.y.push( y );
+      return;
     }
 
-    o.plot = function( ) {
+    if( o.x.length < 2 ) {
 
-      if( 1 < o.x.length ) {
-                
-      let
-      x0 = o.dsp.xd2c( o.x[ o.x.length - 2 ] ),
-      x1 = o.dsp.xd2c( o.x[ o.x.length - 1 ] ),
-      yv0 = o.y[ o.y.length - 2 ],
-      yv1 = o.y[ o.y.length - 1 ];
+      o.x = [ 0, 1 ];
+      o.y = [ o.y[ 0 ], yn ];
+    }
+    else {
+
+      o.x = [ o.x[ 1 ], o.x[ 1 ] + 1 ];
+      o.y = [ o.y[ 1 ], yn ];
+    }
+  }
+
+  o.plot = function( ) {
+
+    if( o.x.length < 2 ) {
+
+      return;
+    }
+              
+    let
+    x0 = o.dsp.xd2c( o.x[ 0 ] ),
+    x1 = o.dsp.xd2c( o.x[ 1 ] ),
+    yv0 = o.y[ 0 ],
+    yv1 = o.y[ 1 ];
+    
+    for( let j = 0; j < yv0.length - 1; ++ j ) {
       
-      for( let j = 0; j < yv0.length - 1; ++ j ) {
+      let 
+      y0 = o.dsp.yd2c( o.max_y - yv0[ j ] ),
+      y1 = o.dsp.yd2c( o.max_y - yv1[ j + 1 ] );
 
-          let y0 = o.dsp.yd2c( o.max_y - yv0[ j ] );
-          let y1 = o.dsp.yd2c( o.max_y - yv1[ j + 1 ] );
-
-          o.cntxt.fillStyle = [
-              o.colors.sick.treated, o.colors.sick.untreated,
-              o.colors.recovered.treated, o.colors.recovered.untreated,
-              o.colors.healthy,
-              o.colors.dead.treated, o.colors.dead.untreated
-            ][ j ];
-            
-          o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );            
-      }
+      o.cntxt.fillStyle = [
+          o.colors.sick.treated, o.colors.sick.untreated,
+          o.colors.recovered.treated, o.colors.recovered.untreated,
+          o.colors.healthy,
+          o.colors.dead.treated, o.colors.dead.untreated
+        ][ j ];
+        
+      o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );            
     }
   }
 }

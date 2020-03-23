@@ -95,20 +95,20 @@
 				}
 			},
 
-			walls = [ new Wall( .975, .1, 1.025, .9 ), new Wall( .475, .1, .525, .9 ), new Wall( 1.475, .1, 1.525, .9 ), new Wall( .1, .475, 1.9, .525 ) ],
+			walls = [ new Wall( .97, .1, 1.03, .9 ), new Wall( .47, .1, .53, .9 ), new Wall( 1.47, .1, 1.53, .9 ) ],//, new Wall( .1, .47, 1.9, .53 ) ],
 
 			pans = [
-				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .005, acceleration = 4.e-8, sicktime = 500, seed = 23, addwalls = [ ], colors = colors ),
-				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .005, acceleration = 3.e-8, sicktime = 500, seed = 23, addwalls = walls, colors = colors ),
-				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .003, acceleration = 2.e-8, sicktime = 500, seed = 23, addwalls = [ ], colors = colors ),
-				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .015, velocity = .003, acceleration = 1.e-8, sicktime = 500, seed = 23, addwalls = walls, colors = colors )
+				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .003, acceleration = 1.e-7, sicktime = 250, seed = 55, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .01, acceleration = 3.e-8, sicktime = 250, seed = 54, addwalls = walls, colors = colors ),
+				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .0032, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 54, addwalls = walls, colors = colors )
 			],
 
 			hist = [ 
-				new Histogram( "histo1", 1000, pans[ 0 ].hmn.length, colors ),
-				new Histogram( "histo2", 1000, pans[ 1 ].hmn.length, colors ),
-				new Histogram( "histo3", 1000, pans[ 2 ].hmn.length, colors ),
-				new Histogram( "histo4", 1000, pans[ 3 ].hmn.length, colors )
+				new Histogram( "histo1", 1500, pans[ 0 ].hmn.length, colors ),
+				new Histogram( "histo2", 1500, pans[ 1 ].hmn.length, colors ),
+				new Histogram( "histo3", 1500, pans[ 2 ].hmn.length, colors ),
+				new Histogram( "histo4", 1500, pans[ 3 ].hmn.length, colors )
 			],
 
 			updt = [ ];
@@ -129,14 +129,14 @@
 							"<br>Infizierte ausserhalb des Gesundheitswesens: " + pans[ i ].states.sick.untreated +
 							"<br>Geheilte innerhalb des Gesundheitswesens: " + pans[ i ].states.recovered.treated +
 							"<br>Geheilte ausserhalb des Gesundheitswesens: " + pans[ i ].states.recovered.untreated +
-							"<br>Tote innerhalb des Gesundheitswesens:" + pans[ i ].states.dead.treated +
-							"<br>Tote ausserhalb des Gesundheitswesens:" + pans[ i ].states.dead.untreated;
+							"<br>Tote innerhalb des Gesundheitswesens: " + pans[ i ].states.dead.treated +
+							"<br>Tote ausserhalb des Gesundheitswesens: " + pans[ i ].states.dead.untreated;
 							
 							pans[ i ].do( );
 
 							if( pans[ i ].time_cnt & 0x3 == 0x3 ) {
 							
-								hist[ i ].add( pans[ i ].time_cnt >> 2, pans[ i ].states );
+								hist[ i ].add( pans[ i ].states );
 							
 								hist[ i ].plot( );
 							}
