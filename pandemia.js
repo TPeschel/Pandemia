@@ -283,7 +283,7 @@ Pandemia = function (
         }
         else if( h.state == STATE.sick_untreated ) {
 
-          if( o.rng.nextFloat( ) < .75 ) {
+          if( o.rng.nextFloat( ) < .666 ) {
 
             h.new_state( STATE.recovered_untreated );
           }

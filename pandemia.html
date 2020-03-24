@@ -17,60 +17,60 @@
 		  PANDEMIC DISEASE SIMULATIONS
 		</p>
 		<div>
+			<p>Keine Beschränkungen</p>
 	    	<canvas class = "cnvs", id="cnvs1">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
 			<div>
-				<p id="info1">
-					
-				</p>
+				<p>Keine Beschränkungen</p>
+				<p id="info1"></p>
 			</div>
 	    	<canvas class = "hist", id="histo1">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
+			<p>Social Distancing - wird durch höhere Abstossung simuliert</p>
 	    	<canvas class = "cnvs", id="cnvs2">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
 			<div>
-				<p id="info2">
-					
-				</p>
+				<p>Social Distancing - wird durch höhere Abstossung simuliert</p>
+				<p id="info2"></p>
 			</div>
 	    	<canvas class = "hist", id="histo2">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
+			<p>Ausgangssperre - wird durch Waende simuliert</p>
 	    	<canvas class = "cnvs", id="cnvs3">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
 			<div>
-				<p id="info3">
-					
-				</p>
+				<p>Ausgangssperre - wird durch Waende simuliert</p>
+				<p id="info3"></p>
 			</div>
 	    	<canvas class = "hist", id="histo3">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
+			<p>Social Distancing und Ausgangsperre</p>
 	    	<canvas class = "cnvs", id="cnvs4">
 				no html 5 supported
 			</canvas>
 		</div>
 		<div>
 			<div>
-				<p id="info4">
-					
-				</p>
+				<p>Social Distancing und Ausgangsperre</p>
+				<p id="info4"></p>
 			</div>
 	    	<canvas class = "hist", id="histo4">
 				no html 5 supported
@@ -98,9 +98,9 @@
 			walls = [ new Wall( .97, .1, 1.03, .9 ), new Wall( .47, .1, .53, .9 ), new Wall( 1.47, .1, 1.53, .9 ) ],//, new Wall( .1, .47, 1.9, .53 ) ],
 
 			pans = [
-				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .003, acceleration = 1.e-7, sicktime = 250, seed = 55, addwalls = [ ], colors = colors ),
-				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .01, acceleration = 3.e-8, sicktime = 250, seed = 54, addwalls = walls, colors = colors ),
-				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .0032, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 55, addwalls = [ ], colors = colors ),
+				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = walls, colors = colors ),
 				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 54, addwalls = walls, colors = colors )
 			],
 
