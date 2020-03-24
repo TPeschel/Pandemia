@@ -1,6 +1,6 @@
 Histogram = function ( 
   cnvs_name, max_x, max_y,
-  colors =   colors = { 
+  colors = { 
     healthy : "#00ff00",
     sick : {
       treated : "#0000ff",
@@ -14,7 +14,8 @@ Histogram = function (
       treated : "#00007f",
       untreated : "#7f0000",
     }
-  } ) {
+  },
+  max_hospital = .2 ) {
 
   let o = this;
 
@@ -27,7 +28,8 @@ Histogram = function (
   o.dsp         = new Display( o.cnvs.width, o.cnvs.height, max_x, max_y );
   o.cntxt.font  = "12pt Calibri";
   o.colors      = colors;
-  
+  o.max_hospital = max_hospital;
+
   o.x = [ ];
   o.y = [ ];
 
@@ -92,7 +94,13 @@ Histogram = function (
           o.colors.dead.treated, o.colors.dead.untreated
         ][ j ];
         
-      o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );            
+      o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );     
+
+      o.cntxt.strokeStyle = "#ff0000";
+      o.cntxt.beginPath( );
+      o.cntxt.moveTo( x0, o.dsp.yd2c( ( 1. - o.max_hospital ) * o.max_y ) );
+      o.cntxt.lineTo( x1, o.dsp.yd2c( ( 1. - o.max_hospital ) * o.max_y ) );
+      o.cntxt.stroke( );
     }
   }
 }
