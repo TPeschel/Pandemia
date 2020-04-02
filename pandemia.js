@@ -156,12 +156,15 @@ Pandemia = function (
 
 	o.create = function( addwalls ) {
 
-    o.rng = new RNG( seed );
-
     for( w of addwalls ) {
 
       o.walls.push( w );
     }
+	}
+
+  o.restart = function( ) {
+    
+    o.rng = new RNG( seed );
 
     o.time_cnt = 0;
     
@@ -184,11 +187,6 @@ Pandemia = function (
     o.hmn[ Math.floor( o.hmn.length * o.rng.nextFloat( ) ) ].new_state( STATE.sick_treated );
 
     o.upd_states( );
-	}
-
-  o.restart = function( addWalls ) {
-
-    o.create( addWalls );
   }
 
 	o.fnt = function ( font ) {
@@ -468,5 +466,6 @@ Pandemia = function (
   }
 
   o.create( addwalls );
+  o.restart( );
 }
 

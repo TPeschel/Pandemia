@@ -16,12 +16,18 @@
 		<p>
 		  PANDEMIC DISEASE SIMULATIONS
 		</p>
-		<button type="button" id="restart">
-			Sim neustarten
+		<button type="button" id="restart_all">
+			Alle Simulationen neustarten
 		</button>
 		<div>
 			<p>Simulation</p>
-	    	<canvas class = "cnvs", id="cnvs1">
+		</div>
+		<div>
+			<p>Keine Beschränkungen</p>
+			<button type="button" id="restart_1">
+				Simulationen neustarten
+			</button>
+			<canvas class = "cnvs", id="cnvs1">
 				no html 5 supported
 			</canvas>
 		</div>
@@ -34,11 +40,70 @@
 				no html 5 supported
 			</canvas>
 		</div>
+		<div>
+			<p>Social Distancing - wird durch höhere Abstossung simuliert</p>
+			<button type="button" id="restart_2">
+				Simulationen neustarten
+			</button>
+	    	<canvas class = "cnvs", id="cnvs2">
+				no html 5 supported
+			</canvas>
+		</div>
+		<div>
+			<div>
+				<p>Social Distancing - wird durch höhere Abstossung simuliert</p>
+				<p id="info2"></p>
+			</div>
+	    	<canvas class = "hist", id="histo2">
+				no html 5 supported
+			</canvas>
+		</div>
+		<div>
+			<p>Ausgangssperre - wird durch Waende simuliert</p>
+			<button type="button" id="restart_3">
+				Simulationen neustarten
+			</button>
+	    	<canvas class = "cnvs", id="cnvs3">
+				no html 5 supported
+			</canvas>
+		</div>
+		<div>
+			<div>
+				<p>Ausgangssperre - wird durch Waende simuliert</p>
+				<p id="info3"></p>
+			</div>
+	    	<canvas class = "hist", id="histo3">
+				no html 5 supported
+			</canvas>
+		</div>
+		<div>
+			<p>Social Distancing und Ausgangsperre</p>
+			<button type="button" id="restart_4">
+				Simulationen neustarten
+			</button>
+	    	<canvas class = "cnvs", id="cnvs4">
+				no html 5 supported
+			</canvas>
+		</div>
+		<div>
+			<div>
+				<p>Social Distancing und Ausgangsperre</p>
+				<p id="info4"></p>
+			</div>
+	    	<canvas class = "hist", id="histo4">
+				no html 5 supported
+			</canvas>
+		</div>
 		<script type="text/javascript">
 		
-			document.querySelector('#restart').addEventListener('click', restart );
+			document.querySelector( '#restart_all' ).addEventListener ('click', restart_all );
+			document.querySelector( '#restart_1' ).addEventListener( 'click', restart_1 );
+			document.querySelector( '#restart_2' ).addEventListener( 'click', restart_2 );
+			document.querySelector( '#restart_3' ).addEventListener( 'click', restart_3 );
+			document.querySelector( '#restart_4' ).addEventListener( 'click', restart_4 );
 
 			let
+			limit_hospitals = .1,
 			colors = { 
 				healthy : "#d0d0d0",
 				sick : {
@@ -58,24 +123,56 @@
 			walls = [ new Wall( .97, .1, 1.03, .9 ), new Wall( .47, .1, .53, .9 ), new Wall( 1.47, .1, 1.53, .9 ) ],//, new Wall( .1, .47, 1.9, .53 ) ],
 
 			pans = [
-				new Pandemia( "cnvs1", count_of_humans_x = 30, count_of_humans_y = 15, radius = .01, velocity = .004, acceleration = 1.e-7, sicktime = 250, seed = 54, addwalls = walls, colors = colors, max_hospital = .15 )
+				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = [ ], colors = colors, max_hospital = limit_hospitals ),
+				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 55, addwalls = [ ], colors = colors, max_hospital = limit_hospitals ),
+				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = walls, colors = colors, max_hospital = limit_hospitals ),
+				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 54, addwalls = walls, colors = colors, max_hospital = limit_hospitals )
 			],
 
 			hist = [ 
-				new Histogram( "histo1", 1500, pans[ 0 ].hmn.length, colors, max_hospital = .15 )
+				new Histogram( "histo1", 1500, pans[ 0 ].hmn.length, colors, max_hospital = .1 ),
+				new Histogram( "histo2", 1500, pans[ 1 ].hmn.length, colors, max_hospital = .1 ),
+				new Histogram( "histo3", 1500, pans[ 2 ].hmn.length, colors, max_hospital = .1 ),
+				new Histogram( "histo4", 1500, pans[ 3 ].hmn.length, colors, max_hospital = .1 )
 			],
 
 			updt = [ ];
 
-			function restart( ) {
+			function restart( i ) {
+
+				hist[ i ].clear( );
+				
+				pans[ i ].restart( );
+
+				updt[ i ]( );
+			}
+
+			function restart_1( ) {
+
+				restart( 0 );
+			}
+
+
+			function restart_2( ) {
+
+				restart( 1 );
+			}
+
+			function restart_3( ) {
+
+				restart( 2 );
+			}
+
+			function restart_4( ) {
+
+				restart( 3 );
+			}
+
+			function restart_all( ) {
 
 				for( let i = 0; i < pans.length; ++ i ) {
 
-					console.log( pans[ i ] );
-
-					pans[ i ].restart( walls );
-
-					hist[ i ].clear( );
+					restart( i );
 				}
 			}
 
