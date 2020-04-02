@@ -113,7 +113,8 @@ Pandemia = function (
       treated : "#00007f",
       untreated : "#7f0000",
     }
-  } ) {
+  },
+  max_hospital = .1 ) {
 
   let o = this;
   
@@ -130,7 +131,7 @@ Pandemia = function (
 	o.rad           = radius;
 	o.vel           = velocity;
   o.acc           = acceleration;
-  o.max_sicks     = .2 * count_of_humans_x * count_of_humans_y;
+  o.max_sicks     = max_hospital * count_of_humans_x * count_of_humans_y;
   o.time_cnt      = 0;
 	o.hmn           = [ ];
   o.walls = [ new Wall( 0., 0., 2., .05 ), new Wall( 0., .95, 2., 1. ), new Wall( 0., 0., .05, 1. ), new Wall( 1.95, 0., 2., 1. ) ];
@@ -154,6 +155,8 @@ Pandemia = function (
   o.colors = colors;
 
 	o.create = function( addwalls ) {
+
+    o.rng = new RNG( seed );
 
     for( w of addwalls ) {
 
@@ -182,6 +185,11 @@ Pandemia = function (
 
     o.upd_states( );
 	}
+
+  o.restart = function( addWalls ) {
+
+    o.create( addWalls );
+  }
 
 	o.fnt = function ( font ) {
 

@@ -30,8 +30,14 @@ Histogram = function (
   o.colors      = colors;
   o.max_hospital = max_hospital;
 
-  o.x = [ ];
-  o.y = [ ];
+  o.clear = function( ) {
+
+    o.x = [ ];
+    o.y = [ ];
+
+    o.cntxt.fillStyle = "#404040"
+    o.cntxt.fillRect( 0, 0, o.cnvs.width, o.cnvs.height );     
+  }
 
   o.add = function( states ) {
 
@@ -103,4 +109,6 @@ Histogram = function (
       o.cntxt.stroke( );
     }
   }
+
+  o.clear( );
 }
