@@ -1,12 +1,12 @@
 body {
 
-    background-color : #d0d0d0;
+    background-color : #f0f0f0;
     color            : #a0a0a0;
 }
 
 .cnvs {
 
-	background-color : #d0d0d0;
+	background-color : #f0f0f0;
 	display          : block;
     border           : 1px solid black;
     border-spacing   : 15px;
@@ -19,7 +19,7 @@ body {
 
 .hist {
 
-	background-color : #808080;
+	background-color : #f0f0f0;
 	display          : block;
     border           : 1px solid black;
     border-spacing   : 15px;
