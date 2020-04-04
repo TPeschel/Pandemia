@@ -105,14 +105,14 @@
 			let
 			limit_hospitals = .1,
 			colors = { 
-				healthy : "#d0d0d0",
+				healthy : "#e0e0e0",
 				sick : {
 					treated : "#2040ff",
 					untreated : "#ff4020"
 				},
 				recovered : {
-					treated : "#80a0ff",
-					untreated : "#ff9080"
+					treated : "#60b0ff",
+					untreated : "#ffb060"
 				},
 				dead : {
 					treated : "#00007f",
@@ -123,10 +123,10 @@
 			walls = [ new Wall( .97, .1, 1.03, .9 ), new Wall( .47, .1, .53, .9 ), new Wall( 1.47, .1, 1.53, .9 ) ],//, new Wall( .1, .47, 1.9, .53 ) ],
 
 			pans = [
-				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = [ ], colors = colors, max_hospital = limit_hospitals ),
-				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 55, addwalls = [ ], colors = colors, max_hospital = limit_hospitals ),
-				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-8, sicktime = 250, seed = 54, addwalls = walls, colors = colors, max_hospital = limit_hospitals ),
-				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .013, velocity = .005, acceleration = 1.e-6, sicktime = 250, seed = 54, addwalls = walls, colors = colors, max_hospital = limit_hospitals )
+				new Pandemia( "cnvs1", count_of_humans_x = 20, count_of_humans_y = 10, radius = .02, velocity = .01, acceleration = 1.e-7, sicktime = 300, seed = 54, addwalls = [ ], colors = colors, max_hospital = limit_hospitals ),
+				new Pandemia( "cnvs2", count_of_humans_x = 20, count_of_humans_y = 10, radius = .02, velocity = .01, acceleration = 5.e-7, sicktime = 300, seed = 54, addwalls = [ ], colors = colors, max_hospital = limit_hospitals ),
+				new Pandemia( "cnvs3", count_of_humans_x = 20, count_of_humans_y = 10, radius = .02, velocity = .01, acceleration = 1.e-7, sicktime = 300, seed = 54, addwalls = walls, colors = colors, max_hospital = limit_hospitals ),
+				new Pandemia( "cnvs4", count_of_humans_x = 20, count_of_humans_y = 10, radius = .02, velocity = .01, acceleration = 3.e-7, sicktime = 300, seed = 54, addwalls = walls, colors = colors, max_hospital = limit_hospitals )
 			],
 
 			hist = [ 

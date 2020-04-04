@@ -354,7 +354,7 @@ Pandemia = function (
 
             n  = 1. / v2abs( d );
             dn = V2( d.x * n, d.y * n ),
-            a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-4 );
+            a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-3 );
 
             h1.acc.x -= a * dn.x;
             h1.acc.y -= a * dn.y;
