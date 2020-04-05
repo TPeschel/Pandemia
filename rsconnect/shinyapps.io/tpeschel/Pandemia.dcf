@@ -5,8 +5,8 @@ account: tpeschel
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2060776
-bundleId: 2972809
+bundleId: 2972914
 url: https://tpeschel.shinyapps.io/Pandemia/
-when: 1586122292.64903
+when: 1586124942.49453
 asMultiple: FALSE
 asStatic: FALSE
