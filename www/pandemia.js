@@ -308,15 +308,13 @@ Pandemia = function(
 				}
 			}
 		
+			h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x - 1e-6 * h.vel.x, 0.005 ), -0.005 );
+			h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y - 1e-6 * h.vel.y, 0.005 ), -0.005 );
+
 			if( ( h.state != STATE.dead_treated && h.state != STATE.dead_untreated ) ) {
-		
-				h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x - 1e-6 * h.vel.x, 0.005 ), -0.005 );
-				h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y - 1e-6 * h.vel.y, 0.005 ), -0.005 );
-			}
-			else {
-		
-				h.vel.x = 0;
-				h.vel.y = 0;
+
+				h.vel.x *= 0.99;
+				h.vel.y *= 0.99;
 			}
 		
 			if( h.state == STATE.sick_treated ) {
@@ -347,7 +345,7 @@ Pandemia = function(
 		for( let i = 0; i < o.hmn.length - 1; i ++ ) {
 		
 			h1 = o.hmn[ i ];
-		
+			
 			for( let j = i + 1; j < o.hmn.length; j ++ ) {
 		
 				if( i != j ) {
@@ -364,8 +362,11 @@ Pandemia = function(
 						dn = V2( d.x * n, d.y * n ),
 						a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-3 );
 						
-						h1.acc.x -= a * dn.x;
-						h1.acc.y -= a * dn.y;
+						//if( ( h1.state != STATE.dead_treated && h1.state != STATE.dead_untreated ) ) {
+
+							h1.acc.x -= a * dn.x;
+							h1.acc.y -= a * dn.y;
+						//}
 						h2.acc.x += a * dn.x;
 						h2.acc.y += a * dn.y;
 					}
@@ -466,9 +467,9 @@ Pandemia = function(
 	
 		o.time_cnt = o.time_cnt < 4000 ? o.time_cnt + 1 : 0;
 		
-		o.upd_states( );
 		o.accelerate( );
 		o.move( );
+		o.upd_states( );
 		o.draw ( );
 	};
 		
