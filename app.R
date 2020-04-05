@@ -4,7 +4,11 @@ library( bs4Dash )
 # Define UI for application that draws a histogram
 ui <- bs4Dash::bs4DashPage(
     sidebar = bs4Dash::bs4DashSidebar( disable = T ),
-    navbar = bs4Dash::bs4DashNavbar( skin = "light", rightUi = HTML( "<h3>Pandemie Simulation</h3>" ) ),
+    navbar = bs4Dash::bs4DashNavbar( 
+        skin = "light",
+        rightUi = HTML( "<a href=https://tpeschel.github.io/Pandemia/><h3>Pandemie Simulation</h3></a>" ),
+        controlbarIcon = NULL
+    ),
     controlbar = bs4Dash::bs4DashControlbar(
         disable = T
     ),
@@ -15,7 +19,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_COUNT_X",
-                        label = "Menschen pro Reihe",
+                        label = "Menschen pro Zeile",
                         min = 2,
                         max = 50,
                         value = 20,
@@ -39,8 +43,8 @@ ui <- bs4Dash::bs4DashPage(
                         inputId = "ID_SI_RADIUS",
                         label = "Radius",
                         min = 10,
-                        max = 30,
-                        value = 20,
+                        max = 25,
+                        value = 15,
                         width = "100%"
                     ),
                     width = 4,
@@ -48,7 +52,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_VEL",
-                        label = "ø Geschwindigkeit",
+                        label = "Agilität",
                         min = 0,
                         max = 1000,
                         value = 500,
@@ -59,7 +63,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_ACC",
-                        label = "ø Repulsivität",
+                        label = "Social Diastancing",
                         min = 0,
                         max = 1000,
                         value = 250,
@@ -116,7 +120,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_SEED",
-                        label = "Seed für Zufallsgenerator",
+                        label = "Startwert für Zufallsgenerator",
                         min = 1,
                         max = 1000,
                         value = 1,
@@ -159,7 +163,9 @@ ui <- bs4Dash::bs4DashPage(
             maximizable = T
         )
     ),
-    footer = bs4Dash::bs4DashFooter( )
+    footer = bs4Dash::bs4DashFooter(
+        HTML( '<a href="https://github.com/TPeschel/Pandemia/">Feel free to download and change and use it for your purpose!</a>' )
+    )
 )
 
 # Define server logic required to draw a histogram
