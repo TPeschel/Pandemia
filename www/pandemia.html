@@ -27,27 +27,48 @@
 					untreated : "#ff4020"
 				},
 				recovered : {
-					treated : "#60b0ff",
-					untreated : "#ffb060"
+					treated : "#6080ff",
+					untreated : "#ff8060"
 				},
 				dead : {
-					treated : "#00007f",
-					untreated : "#7f0000"
+					treated : "#202070",
+					untreated : "#702020"
 				}
 			},
 
-			walls = [ new Wall( .97, .1, 1.03, .9 ), new Wall( .47, .1, .53, .9 ), new Wall( 1.47, .1, 1.53, .9 ) ],//, new Wall( .1, .47, 1.9, .53 ) ],
+			walls = [ new Wall( .47, .1, .53, .9 ), new Wall( .97, .1, 1.03, .9 ),  new Wall( 1.47, .1, 1.53, .9 ), new Wall( .1, .47, 1.9, .53 ) ],
 
-			pans = new Pandemia( "cnvs", count_of_humans_x = 20, count_of_humans_y = 15, radius = .02, velocity = .05, acceleration = 23.e-8, sicktime = 500, seed = 5, addwalls = walls, colors = colors, max_hospital = limit_hospitals ),
+			pans = null,//new Pandemia( "cnvs", count_of_humans_x = 20, count_of_humans_y = 15, radius = .02, velocity = .05, acceleration = 23.e-8, sicktime = 500, seed = 5, addwalls = walls, colors = colors, max_hospital = limit_hospitals ),
 
-			hist = new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = limit_hospitals );
+			hist = null,//new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = limit_hospitals ),
+			
+			walls_sel = [ ];
 
 			$( document ).on(
 				'shiny:inputchanged', 
 				function( event ) {
 			
-					console.log( event.name  )
-					if( event.name === "ID_AB_START" ) {
+					console.log( event.name )
+					
+					if( event.name === "ID_CB_WALLS" ) {
+						
+						walls_sel = [ ];
+
+						for( let w of event.value ) {
+							
+							switch( w ) {
+								case 'VL': walls_sel.push( walls[ 0 ] ); break;
+								case 'VM': walls_sel.push( walls[ 1 ] ); break;
+								case 'VR': walls_sel.push( walls[ 2 ] ); break;
+								case 'H' : walls_sel.push( walls[ 3 ] ); break;
+								default:
+									// code
+							}				
+						}
+						
+						console.log( event )
+					}
+					else if( event.name === "ID_AB_START" ) {
 					
 						let
 						cx = parseInt( document.getElementById( 'ID_SI_COUNT_X' ).value ),
@@ -57,11 +78,14 @@
 						ac = parseInt( document.getElementById( 'ID_SI_ACC' ).value ),
 						st = parseInt( document.getElementById( 'ID_SI_ST' ).value ),
 						se = parseInt( document.getElementById( 'ID_SI_SEED' ).value ),
+						mi = parseInt( document.getElementById( 'ID_SI_MORTALITY_INSIDE' ).value ),
+						mo = parseInt( document.getElementById( 'ID_SI_MORTALITY_OUTSIDE' ).value ),
 						mh = parseFloat( document.getElementById( 'ID_SI_MAX_HOSP' ).value );
 						
-						pans = new Pandemia( "cnvs", count_of_humans_x = cx, count_of_humans_y = cy, radius = 0.001 * rd, velocity = 0.001 * vl, acceleration = ac * 1e-9, sicktime = st, seed = se, addwalls = walls, colors = colors, max_hospital = mh );
+
+						pans = new Pandemia( "cnvs", count_of_humans_x = cx, count_of_humans_y = cy, radius = 0.001 * rd, velocity = 1e-5 * vl, acceleration = ac * 1e-9, sicktime = st, seed = se, addwalls = walls_sel, colors = colors, max_hospital = .01 * mh, mortality_inside = .01 * mi, mortality_outside = .01 * mo );
 						
-						hist = new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = mh );
+						hist = new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = .01 * mh );
 						
 						restart( );
 					}
@@ -93,14 +117,14 @@
 					}
 					
 					document.getElementById( "info" ).innerHTML = 
-					"Total: " + pans.hmn.length + 
-					"<br>Gesunde: " + pans.states.healthy +
-					"<br>Infizierte innerhalb des Gesundheitswesens: " + pans.states.sick.treated +
-					"<br>Infizierte ausserhalb des Gesundheitswesens: " + pans.states.sick.untreated +
-					"<br>Geheilte innerhalb des Gesundheitswesens: " + pans.states.recovered.treated +
-					"<br>Geheilte ausserhalb des Gesundheitswesens: " + pans.states.recovered.untreated +
-					"<br>Tote innerhalb des Gesundheitswesens: " + pans.states.dead.treated +
-					"<br>Tote ausserhalb des Gesundheitswesens: " + pans.states.dead.untreated;							
+					"<font color=black>Total: " + pans.hmn.length + "</font><br>" +
+					"<font color=" + colors.healthy + ">Gesunde: " + pans.states.healthy + "</font><br>" +
+					"<font color=" + colors.sick.treated + ">Infizierte innerhalb des Gesundheitswesens: " + pans.states.sick.treated + "</font><br>" +
+					"<font color=" + colors.sick.untreated + ">Infizierte ausserhalb des Gesundheitswesens: " + pans.states.sick.untreated + "</font><br>" +
+					"<font color=" + colors.recovered.treated + ">Genesene innerhalb des Gesundheitswesens: " + pans.states.recovered.treated + "</font><br>" +
+					"<font color=" + colors.recovered.untreated + ">Genesene ausserhalb des Gesundheitswesens: " + pans.states.recovered.untreated + "</font><br>" +
+					"<font color=" + colors.dead.treated + ">Tote innerhalb des Gesundheitswesens: " + pans.states.dead.treated + "</font><br>" +
+					"<font color=" + colors.dead.untreated + ">Tote ausserhalb des Gesundheitswesens: " + pans.states.dead.untreated + "</font>";			
 				}
 			}
 

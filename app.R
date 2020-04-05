@@ -4,13 +4,14 @@ library( bs4Dash )
 # Define UI for application that draws a histogram
 ui <- bs4Dash::bs4DashPage(
     sidebar = bs4Dash::bs4DashSidebar( disable = T ),
-    navbar = bs4Dash::bs4DashNavbar( ),
+    navbar = bs4Dash::bs4DashNavbar( skin = "light", rightUi = HTML( "<h3>Settings</h3>" ) ),
+    controlbar_collapsed = F,
     controlbar = bs4Dash::bs4DashControlbar(
         fluidRow(
             column(
                 sliderInput(
                     inputId = "ID_SI_COUNT_X",
-                    label = "people in a row",
+                    label = "Menschen pro Reihe",
                     min = 2,
                     max = 50,
                     value = 20,
@@ -21,7 +22,7 @@ ui <- bs4Dash::bs4DashPage(
             column(
                 sliderInput(
                     inputId = "ID_SI_COUNT_Y",
-                    label = "people in a column",
+                    label = "Menschen pro Spalte",
                     min = 1,
                     max = 25,
                     value = 10,
@@ -32,10 +33,10 @@ ui <- bs4Dash::bs4DashPage(
             column(
                 sliderInput(
                     inputId = "ID_SI_RADIUS",
-                    label = "radius",
-                    min = 5,
+                    label = "Radius",
+                    min = 10,
                     max = 30,
-                    value = 15,
+                    value = 20,
                     width = "100%"
                 ),
                 width = 6,
@@ -43,10 +44,10 @@ ui <- bs4Dash::bs4DashPage(
             column(
                 sliderInput(
                     inputId = "ID_SI_VEL",
-                    label = "velocity",
-                    min = 10,
-                    max = 100,
-                    value = 15,
+                    label = "ø Geschwindigkeit",
+                    min = 0,
+                    max = 1000,
+                    value = 500,
                     width = "100%"
                 ),
                 width = 6,
@@ -54,7 +55,7 @@ ui <- bs4Dash::bs4DashPage(
             column(
                 sliderInput(
                     inputId = "ID_SI_ACC",
-                    label = "repulsivity",
+                    label = "ø Repulsivität",
                     min = 0,
                     max = 1000,
                     value = 250,
@@ -65,7 +66,7 @@ ui <- bs4Dash::bs4DashPage(
             column(
                 sliderInput(
                     inputId = "ID_SI_ST",
-                    label = "time one is sick",
+                    label = "Infektionsdauer",
                     min = 1,
                     max = 1000,
                     value = 250,
@@ -75,12 +76,35 @@ ui <- bs4Dash::bs4DashPage(
             ),
             column(
                 sliderInput(
+                    inputId = "ID_SI_MORTALITY_INSIDE",
+                    label = "Mortalität innerhalb des Gesundheitswesens in %",
+                    min   = 0,
+                    max   = 100,
+                    value = 10,
+                    step  = 1,
+                    width = "100%"
+                ),
+                width = 6,
+            ),
+            column(
+                sliderInput(
+                    inputId = "ID_SI_MORTALITY_OUTSIDE",
+                    label   = "Mortalität ausserhalb des Gesundheitswesens in %",
+                    min     = 0,
+                    max     = 100,
+                    value   = 25,
+                    width   = "100%"
+                ),
+                width = 6,
+            ),
+            column(
+                sliderInput(
                     inputId = "ID_SI_MAX_HOSP",
-                    label = "capacity of health care system",
+                    label = "Kapazität des Gesundheitswesens in %",
                     min = 0,
-                    max = 1,
-                    value = .2,
-                    step = .01,
+                    max = 100,
+                    value = 15,
+                    step = 1,
                     width = "100%"
                 ),
                 width = 6,
@@ -88,11 +112,22 @@ ui <- bs4Dash::bs4DashPage(
             column(
                 sliderInput(
                     inputId = "ID_SI_SEED",
-                    label = "seed",
+                    label = "Seed für Zufallsgenerator",
                     min = 1,
                     max = 1000,
                     value = 1,
                     width = "100%"
+                ),
+                width = 6,
+            ),
+            column(
+                checkboxGroupInput(
+                    inputId  = "ID_CB_WALLS",
+                    label    = "Wände",
+                    choices  = c( "VL", "VM", "VR", "H" ),
+                    selected = character( 0 ),
+                    inline   = T,
+                    width    = "100%"
                 ),
                 width = 6,
             ),
@@ -108,11 +143,11 @@ ui <- bs4Dash::bs4DashPage(
         ),
         skin  = "light",
         title = "SETTTINGS",
-        width = 300
+        width = 400
     ),
     body = bs4Dash::bs4DashBody( 
         bs4Dash::bs4Card(
-            title = "Corona",
+            title = "Pandemie Simulation",
             includeHTML( "www/pandemia.html" ),
             width = 12,
             #height = "100%",

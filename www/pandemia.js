@@ -120,7 +120,9 @@ Pandemia = function(
 			untreated : "#7f0000",
 		}
 	},
-	max_hospital = 0.1 ) {
+	max_hospital = 0.1,
+	mortality_inside = 0.1,
+	mortality_outside = 0.25 ) {
 	
 		let o = this;
 		
@@ -140,6 +142,8 @@ Pandemia = function(
 		o.vel           = velocity;
 		o.acc           = acceleration;
 		o.max_sicks     = max_hospital * count_of_humans_x * count_of_humans_y;
+		o.mort_in       = mortality_inside,
+		o.mort_out      = mortality_outside,
 		o.time_cnt      = 0;
 		o.hmn           = [ ];
 		o.walls			= [ new Wall( 0.0, 0.0, 2.0, 0.05 ), new Wall( 0.0, 0.95, 2.0, 1.0 ), new Wall( 0.0, 0.0, 0.05, 1.0 ), new Wall( 1.95, 0.0, 2.0, 1.0 ) ];
@@ -286,7 +290,7 @@ Pandemia = function(
 		
 				if( h.state == STATE.sick_treated ) {
 		
-					if( o.rng.nextFloat( ) < 0.90 ) {
+					if( o.rng.nextFloat( ) < ( 1.0 - o.mort_in ) ) {
 		
 						h.new_state( STATE.recovered_treated );
 					}
@@ -297,7 +301,7 @@ Pandemia = function(
 				}
 				else if( h.state == STATE.sick_untreated ) {
 		
-					if( o.rng.nextFloat( ) < 0.666 ) {
+					if( o.rng.nextFloat( ) < ( 1.0 - o.mort_out ) ) {
 		
 						h.new_state( STATE.recovered_untreated );
 					}
@@ -308,13 +312,13 @@ Pandemia = function(
 				}
 			}
 		
-			h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x - 1e-6 * h.vel.x, 0.005 ), -0.005 );
-			h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y - 1e-6 * h.vel.y, 0.005 ), -0.005 );
+			h.vel.x = Math.max( Math.min( h.vel.x + h.acc.x, 0.01 ), -0.01 );
+			h.vel.y = Math.max( Math.min( h.vel.y + h.acc.y, 0.01 ), -0.01 );
 
-			if( ( h.state != STATE.dead_treated && h.state != STATE.dead_untreated ) ) {
+			if( ( h.state == STATE.dead_treated || h.state == STATE.dead_untreated ) ) {
 
-				h.vel.x *= 0.99;
-				h.vel.y *= 0.99;
+				h.vel.x = 0.0;
+				h.vel.y = 0.0;
 			}
 		
 			if( h.state == STATE.sick_treated ) {
@@ -362,13 +366,17 @@ Pandemia = function(
 						dn = V2( d.x * n, d.y * n ),
 						a  = Math.min( o.acc / ( d.y * d.y + d.x * d.x ), 1e-3 );
 						
-						//if( ( h1.state != STATE.dead_treated && h1.state != STATE.dead_untreated ) ) {
+						if( ( h2.state != STATE.dead_treated && h2.state != STATE.dead_untreated ) ) {
 
 							h1.acc.x -= a * dn.x;
 							h1.acc.y -= a * dn.y;
-						//}
-						h2.acc.x += a * dn.x;
-						h2.acc.y += a * dn.y;
+						}
+						
+						if( ( h1.state != STATE.dead_treated && h1.state != STATE.dead_untreated ) ) {
+
+							h2.acc.x += a * dn.x;
+							h2.acc.y += a * dn.y;
+						}
 					}
 				
 					o.hmn[ j ] = h2;
