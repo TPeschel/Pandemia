@@ -1,0 +1,12 @@
+name: Pandemia
+title: Pandemia
+username:
+account: tpeschel
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2060776
+bundleId: 2971827
+url: https://tpeschel.shinyapps.io/Pandemia/
+when: 1586100237.76987
+asMultiple: FALSE
+asStatic: FALSE
