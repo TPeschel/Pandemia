@@ -164,7 +164,7 @@ ui <- bs4Dash::bs4DashPage(
         )
     ),
     footer = bs4Dash::bs4DashFooter(
-        HTML( '<a href="https://github.com/TPeschel/Pandemia/">Feel free to download and change and use it for your purpose!</a>' )
+        HTML( '<a href="https://github.com/TPeschel/Pandemia/">https://github.com/TPeschel/Pandemia</a>' )
     )
 )
 
