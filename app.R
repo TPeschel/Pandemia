@@ -131,8 +131,8 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     checkboxGroupInput(
                         inputId  = "ID_CB_WALLS",
-                        label    = "Wände",
-                        choices  = c( "VL", "VM", "VR", "H" ),
+                        label    = "Barrieren",
+                        choices  = c( "Vertikal Links", "Vertikal Mitte", "Vertikal Rechts", "Horizontal" ),
                         selected = character( 0 ),
                         inline   = T,
                         width    = "100%"
