@@ -2,13 +2,13 @@
 
 ### Zweck
 
-Diese Simulation dient nicht dem Zweck, prädiktive Aussagen zu treffen.
+Diese Simulation dient darstellerischen Zwecken.
 
-Sie dient darstellerischen Zwecken.
+Da diese Simulation viel zu wenig Einheiten simuliert,
+kann sie auch keine Vorhersagen abbilden.
 
-Da diese Simulation viel zu wenig Einheiten simuliert, kann sie auch keine Vorhersagen abbilden.
-
-Mit dieser App können aber verschiedene Szenarien und der Einfluss diverser Massnahmen animatronisch dargestellt werden, die bei einer Pandemie relevant sind.
+Mit dieser App können verschiedene Szenarien und der Einfluss diverser Massnahmen animatronisch dargestellt werden,
+die bei einer Pandemie relevant sind.
 
 ### Shiny App
 
