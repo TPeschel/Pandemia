@@ -1,4 +1,4 @@
-# Pandemie Simulation
+# Pandemia Simulation
 
 ### Zweck
 
@@ -15,3 +15,7 @@ die bei einer Pandemie relevant sind.
 Unter dem Link findet man die Simulation als Shiny-App.
 
 [zur App](https://tpeschel.shinyapps.io/Pandemia "Pandemie Simulation" )
+
+### Beste Grüße
+
+Thomas.Peschel@IMISE.Uni-Leipzig.DE
