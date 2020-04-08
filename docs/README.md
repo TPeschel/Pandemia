@@ -1,14 +1,21 @@
-# Pandemia Simulation
+# Pandemie Simulation
 
-### Zweck
-
-Diese Simulation dient darstellerischen Zwecken.
-
-Da diese Simulation viel zu wenig Einheiten simuliert,
-kann sie auch keine Vorhersagen abbilden.
+Diese Simulation dient ausschließlich darstellerischen Zwecken.
 
 Mit dieser App können verschiedene Szenarien und der Einfluss diverser Massnahmen animatronisch dargestellt werden,
 die bei einer Pandemie relevant sind.
+
+Dabei können die folgenden Parameter variiert werden:
+-  Größe der Population
+-  Dichte der Population
+-  Agilität der Population
+-  Dauer der Infektion
+-  Social Distancing / Repulsivität
+-  Dämpfung der Agiltät und Zunahme des Solcial Distancings innerhalb des Gesundheitswesens / Quarantäne
+-  Letalität der Infektion in Quarantäne & Behandlung / innerhalb des Gesundheitswesens
+-  Letalität der Infektion ohne Behandlung / ausserhalb des Gesundheitswesens
+-  räumliche Trennung durch Barrieren
+-  Startwert des Zufallsgenerators
 
 ### Shiny App
 
