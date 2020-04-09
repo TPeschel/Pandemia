@@ -6,7 +6,8 @@ ui <- bs4Dash::bs4DashPage(
     sidebar = bs4Dash::bs4DashSidebar( disable = T ),
     navbar = bs4Dash::bs4DashNavbar( 
         skin = "light",
-        leftUi = HTML( "<a href=https://tpeschel.github.io/Pandemia/><h3>Pandemie Simulation</h3></a>" ),
+        leftUi = HTML( "<font color=#428BC8><h2><b>Pandemie Simulation</b></h2></font>" ),
+        rightUi = HTML( "<a href=https://tpeschel.github.io/Pandemia/><h3>Zur Homepage</h3></a>" ),
         controlbarIcon = NULL
     ),
     controlbar = bs4Dash::bs4DashControlbar(
