@@ -53,40 +53,40 @@ function Wall( x0, y0, x1, y1 ) {
 	
 	o.collide = function( human, rad ) {
 	
-	if(
-		human.pos.x + rad < o.x0 || o.x1 < human.pos.x - rad ||
-		human.pos.y + rad < o.y0 || o.y1 < human.pos.y - rad ) {
+		if(
+			human.pos.x + rad < o.x0 || o.x1 < human.pos.x - rad ||
+			human.pos.y + rad < o.y0 || o.y1 < human.pos.y - rad ) {
+			
+			return human;
+		}
+		
+		let
+		r2  = rad * rad,
+		dx0 = Math.max( o.x0 - human.pos.x, 0 ),
+		dy0 = Math.max( o.y0 - human.pos.y, 0 ),
+		dx1 = Math.max( human.pos.x - o.x1, 0 ),
+		dy1 = Math.max( human.pos.y - o.y1, 0 ),
+		dxs0 = dx0 * dx0,
+		dys0 = dy0 * dy0,
+		dxs1 = dx1 * dx1,
+		dys1 = dy1 * dy1,
+		axe = new V2( dxs0 < dxs1 ? dx1 : - dx0, dys0 < dys1 ? dy1 : - dy0 ),
+		axx = axe.x * axe.x,
+		a2xy = 2 * axe.x * axe.y,
+		ayy = axe.y * axe.y;
+		
+		if( axx + ayy < r2 && v2dot( axe, human.vel ) < 0 ) {
+		
+			let
+			aln = - 1.0 / ( axx + ayy );
+			
+			human.vel.x = 0.001 * axe.x + aln * ( ( axx - ayy ) * human.vel.x + a2xy *          human.vel.y ) ;
+			human.vel.y = 0.001 * axe.y + aln * ( a2xy *          human.vel.x + ( ayy - axx ) * human.vel.y );
+			
+			human.pos = v2add( human.pos, V2( 1.1 * human.vel.x, 1.1 * human.vel.y ) );
+		} 
 		
 		return human;
-	}
-	
-	let
-	r2  = rad * rad,
-	dx0 = Math.max( o.x0 - human.pos.x, 0 ),
-	dy0 = Math.max( o.y0 - human.pos.y, 0 ),
-	dx1 = Math.max( human.pos.x - o.x1, 0 ),
-	dy1 = Math.max( human.pos.y - o.y1, 0 ),
-	dxs0 = dx0 * dx0,
-	dys0 = dy0 * dy0,
-	dxs1 = dx1 * dx1,
-	dys1 = dy1 * dy1,
-	axe = new V2( dxs0 < dxs1 ? dx1 : - dx0, dys0 < dys1 ? dy1 : - dy0 ),
-	axx = axe.x * axe.x,
-	a2xy = 2 * axe.x * axe.y,
-	ayy = axe.y * axe.y;
-	
-	if( axx + ayy < r2 && v2dot( axe, human.vel ) < 0 ) {
-	
-		let
-		aln = - 1.0 / ( axx + ayy );
-		
-		human.vel.x = 0.001 * axe.x + aln * ( ( axx - ayy ) * human.vel.x + a2xy *          human.vel.y ) ;
-		human.vel.y = 0.001 * axe.y + aln * ( a2xy *          human.vel.x + ( ayy - axx ) * human.vel.y );
-		
-		human.pos = v2add( human.pos, V2( 1.1 * human.vel.x, 1.1 * human.vel.y ) );
-	} 
-	
-	return human;
 	};
 }
 
@@ -126,32 +126,33 @@ Pandemia = function(
 	damping_quara = dp,
 	acc_quara = aq ) {
 	
-		let o = this;
-		
-		o.rng           = new RNG( seed ),
-		o.cnvs          = document.getElementById ( cnvs_name );
-/*		o.cnvs.width    = 600;
-		o.cnvs.height   = 300;
-*/		o.cnvs.width    = this.cnvs.clientWidth;
-		o.cnvs.height   = this.cnvs.clientHeight;
-		o.cntxt         = this.cnvs.getContext ( "2d" );
-		o.cntxt.font    = "12pt Calibri";
-		o.dsp           = new Display( o.cnvs.width, o.cnvs.height, 2, 1 );
-		o.cnt_x         = count_of_humans_x;
-		o.cnt_y         = count_of_humans_y;
-		o.sicktime      = sicktime;
-		o.rad           = radius;
-		o.vel           = velocity;
-		o.acc           = acceleration;
-		o.damp          = damping_quara,
-		o.acq           = acc_quara,
-		o.max_sicks     = max_hospital * count_of_humans_x * count_of_humans_y;
-		o.mort_in       = mortality_inside,
-		o.mort_out      = mortality_outside,
-		o.time_cnt      = 0;
-		o.hmn           = [ ];
-		o.walls			= [ new Wall( 0.0, 0.0, 2.0, 0.05 ), new Wall( 0.0, 0.95, 2.0, 1.0 ), new Wall( 0.0, 0.0, 0.05, 1.0 ), new Wall( 1.95, 0.0, 2.0, 1.0 ) ];
-		o.states        = {
+	let o = this;
+	
+	o.rng           = new RNG( seed ),
+	o.cnvs          = document.getElementById ( cnvs_name );
+/*	o.cnvs.width    = 512;
+	o.cnvs.height   = 256;
+*/
+	o.cnvs.width    = this.cnvs.clientWidth;
+	o.cnvs.height   = this.cnvs.clientHeight;
+	o.cntxt         = this.cnvs.getContext ( "2d" );
+	o.cntxt.font    = "12pt Calibri";
+	o.dsp           = new Display( o.cnvs.width, o.cnvs.height, 2, 1 );
+	o.cnt_x         = count_of_humans_x;
+	o.cnt_y         = count_of_humans_y;
+	o.sicktime      = sicktime;
+	o.rad           = radius;
+	o.vel           = velocity;
+	o.acc           = acceleration;
+	o.damp          = damping_quara,
+	o.acq           = acc_quara,
+	o.max_sicks     = max_hospital * count_of_humans_x * count_of_humans_y;
+	o.mort_in       = mortality_inside,
+	o.mort_out      = mortality_outside,
+	o.time_cnt      = 0;
+	o.hmn           = [ ];
+	o.walls			= [ new Wall( 0.0, 0.0, 2.0, 0.05 ), new Wall( 0.0, 0.95, 2.0, 1.0 ), new Wall( 0.0, 0.0, 0.05, 1.0 ), new Wall( 1.95, 0.0, 2.0, 1.0 ) ];
+	o.states        = {
 		total     : count_of_humans_x * count_of_humans_y, 
 		healthy   : 0,
 		sick      : {
@@ -402,9 +403,9 @@ Pandemia = function(
 		
 	o.draw = function ( ) {
 		
-/*		o.cnvs.width  = o.cnvs.clientWidth;
+		o.cnvs.width  = o.cnvs.clientWidth;
 		o.cnvs.height = o.cnvs.clientHeight;
-*/		
+		
 		o.dsp = new Display( o.cnvs.width, o.cnvs.height, 2, 1 );
 		
 		o.cntxt.fillStyle = "#f0f0f0";
@@ -468,7 +469,7 @@ Pandemia = function(
 				treated   : 0,
 				untreated : 0
 			}
-		} 
+		}; 
 		
 		for( let h of o.hmn ) {
 		

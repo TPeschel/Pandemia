@@ -1,4 +1,4 @@
-Display = function( cnvs_width, cnvs_height, disp_width, disp_height, keep_aspect_ratio ) {
+Display = function( cnvs_width, cnvs_height, disp_width, disp_height ) {
     
     let o = this;
   
@@ -6,7 +6,6 @@ Display = function( cnvs_width, cnvs_height, disp_width, disp_height, keep_aspec
     o.cnvs_height = cnvs_height;
     o.disp_width  = disp_width;
     o.disp_height = disp_height;
-    o.keep_aspect_ratio = keep_aspect_ratio;
   
     o.create = function( ) {
   
@@ -14,40 +13,30 @@ Display = function( cnvs_width, cnvs_height, disp_width, disp_height, keep_aspec
       cdev = o.cnvs_height / o.cnvs_width,
       ddev = o.disp_height / o.disp_width;
   
-      if( o.keep_aspect_ratio ) {
+      if( cdev < ddev ) {
   
-        if( cdev < ddev ) {
-    
-          o.ad2c = V2( o.cnvs_height / o.disp_height, 1.0 );
-    
-          o.off = V2( 0.5 * ( o.cnvs_width - o.ad2c.x * o.disp_width ), 0 );  
-        }
-        else {
-    
-          o.ad2c = V2( 1.0, o.cnvs_width / o.disp_width );
-    
-          o.off = V2( 0, 0.5 * ( o.cnvs_height - o.ad2c.y * o.disp_height ) );
-        }
+        o.ad2c = o.cnvs_height / o.disp_height;
+  
+        o.off = V2( 0.5 * ( o.cnvs_width - o.ad2c * o.disp_width ), 0 );  
       }
       else {
-        
-          o.ad2c = V2( o.cnvs_height / o.disp_height, o.cnvs_width / o.disp_width );
-    
-          o.off = V2( 0, 0 );
+  
+        o.ad2c = o.cnvs_width / o.disp_width;
+  
+        o.off = V2( 0, 0.5 * ( o.cnvs_height - o.ad2c * o.disp_height ) );
       }
   
-      o.ac2d.x = 1.0 / o.ad2c.x;
-      o.ac2d.y = 1.0 / o.ad2c.y;
+      o.ac2d = 1.0 / o.ad2c;
     };
   
     o.xd2c = function( x ) {
   
-      return o.off.x + x * o.ad2c.x;
+      return o.off.x + x * o.ad2c;
     };
   
     o.yd2c = function( y ) {
   
-      return o.off.y + y * o.ad2c.y;
+      return o.off.y + y * o.ad2c;
     };
   
     o.d2c = function( dp ) {
@@ -57,12 +46,12 @@ Display = function( cnvs_width, cnvs_height, disp_width, disp_height, keep_aspec
   
     o.xc2d = function( x ) {
   
-      return ( x - o.off.x ) * o.ac2d.x;
+      return ( x - o.off.x ) * o.ac2d;
     };
   
     o.yc2d = function( y ) {
   
-      return ( y - o.off.y ) * o.ac2d.y;
+      return ( y - o.off.y ) * o.ac2d;
     };
   
     o.c2d = function( cp ) {
@@ -71,5 +60,5 @@ Display = function( cnvs_width, cnvs_height, disp_width, disp_height, keep_aspec
     };
   
     o.create( );
-};
+}
   

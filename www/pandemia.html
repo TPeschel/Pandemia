@@ -7,13 +7,13 @@
 		<script src="histogram.js" type="text/javascript"></script>
 		<script src="pandemia.js" type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="pandemia.css">
-		<canvas class="cnvs" id="cnvs" height="800px">
+		<canvas class="cnvs" id="cnvs">
 			no html 5 supported
 		</canvas>
 		<div>
 			<p id="info"></p>
 		</div>
-    	<canvas class="hist" id="histo" height="200px">
+    	<canvas class="hist" id="histo">
 			no html 5 supported
 		</canvas>
 		<script type="text/javascript">
@@ -48,7 +48,7 @@
 				'shiny:inputchanged', 
 				function( event ) {
 			
-					console.log( event.name )
+					console.log( event.name );
 					
 					if( event.name === "ID_CB_WALLS" ) {
 						
@@ -87,7 +87,7 @@
 
 						pans = new Pandemia( "cnvs", count_of_humans_x = cx, count_of_humans_y = cy, radius = 0.001 * rd, velocity = 1e-5 * vl, acceleration = ac * 1e-9, sicktime = st, seed = se, addwalls = walls_sel, colors = colors, max_hospital = .01 * mh, mortality_inside = .01 * mi, mortality_outside = .01 * mo, damping_quara = dp, acc_quara = aq );
 						
-						hist = new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = .01 * mh, false );
+						hist = new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = .01 * mh );
 						
 						restart( );
 					}
@@ -105,7 +105,7 @@
 
 			function updt( ) {
 
-				if( ! pans.finished( ) ) {
+				if( pans != null && ! pans.finished( ) ) {
 
 					requestAnimationFrame ( updt );
 

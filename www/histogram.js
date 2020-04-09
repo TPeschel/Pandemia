@@ -96,10 +96,10 @@ max_hospital = 0.2 ) {
       y1 = o.dsp.yd2c( o.max_y - yv1[ j + 1 ] );
       
       o.cntxt.fillStyle = [
-      o.colors.sick.treated, o.colors.sick.untreated,
-      o.colors.recovered.treated, o.colors.recovered.untreated,
-      o.colors.healthy,
-      o.colors.dead.treated, o.colors.dead.untreated
+        o.colors.sick.treated, o.colors.sick.untreated,
+        o.colors.recovered.treated, o.colors.recovered.untreated,
+        o.colors.healthy,
+        o.colors.dead.treated, o.colors.dead.untreated
       ][ j ];
       
       o.cntxt.fillRect( x0, y0, x1 - x0, y1 - y0 );     
