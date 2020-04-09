@@ -46,14 +46,14 @@ max_hospital = 0.2 ) {
     let
     s = 0,
     yn = [ 
-    s, 
-    s += states.sick.treated,
-    s += states.sick.untreated,
-    s += states.recovered.treated,
-    s += states.recovered.untreated,
-    s += states.healthy,
-    s += states.dead.treated,
-    s += states.dead.untreated 
+      s, 
+      s += states.sick.treated,
+      s += states.sick.untreated,
+      s += states.recovered.treated,
+      s += states.recovered.untreated,
+      s += states.healthy,
+      s += states.dead.treated,
+      s += states.dead.untreated 
     ];
     
     if( o.x.length < 1 ) {

@@ -52,33 +52,22 @@ ui <- bs4Dash::bs4DashPage(
                 ),
                 column(
                     sliderInput(
-                        inputId = "ID_SI_DAMP",
-                        label = "Dämpfung der Agilität in Quarantäne",
-                        min = 0,
-                        max = 1,
-                        value = 0.5,
-                        width = "100%"
-                    ),
-                    width = 4,
-                ),
-                column(
-                    sliderInput(
-                        inputId = "ID_SI_ACC_QUARA",
-                        label = "Isolation in Quarantäne",
-                        min = 1,
-                        max = 10,
-                        value = 5,
-                        width = "100%"
-                    ),
-                    width = 4,
-                ),
-                column(
-                    sliderInput(
                         inputId = "ID_SI_VEL",
                         label = "Agilität",
                         min = 0,
                         max = 1000,
                         value = 500,
+                        width = "100%"
+                    ),
+                    width = 4,
+                ),
+                column(
+                    sliderInput(
+                        inputId = "ID_SI_DAMP",
+                        label = "Dämpfung der Agilität in Quarantäne",
+                        min = 0,
+                        max = 1,
+                        value = 0.5,
                         width = "100%"
                     ),
                     width = 4,
@@ -96,11 +85,11 @@ ui <- bs4Dash::bs4DashPage(
                 ),
                 column(
                     sliderInput(
-                        inputId = "ID_SI_ST",
-                        label = "Infektionsdauer",
+                        inputId = "ID_SI_ACC_QUARA",
+                        label = "Social Distancing in Quarantäne",
                         min = 1,
-                        max = 1000,
-                        value = 250,
+                        max = 10,
+                        value = 2,
                         width = "100%"
                     ),
                     width = 4,
@@ -111,7 +100,7 @@ ui <- bs4Dash::bs4DashPage(
                         label = "Mortalität innerhalb des Gesundheitswesens in %",
                         min   = 0,
                         max   = 100,
-                        value = 10,
+                        value = 5,
                         step  = 1,
                         width = "100%"
                     ),
@@ -134,8 +123,19 @@ ui <- bs4Dash::bs4DashPage(
                         label = "Kapazität des Gesundheitswesens in %",
                         min = 0,
                         max = 100,
-                        value = 15,
+                        value = 10,
                         step = 1,
+                        width = "100%"
+                    ),
+                    width = 4,
+                ),
+                column(
+                    sliderInput(
+                        inputId = "ID_SI_ST",
+                        label = "Infektionsdauer",
+                        min = 1,
+                        max = 1000,
+                        value = 500,
                         width = "100%"
                     ),
                     width = 4,
@@ -146,7 +146,7 @@ ui <- bs4Dash::bs4DashPage(
                         label = "Startwert für Zufallsgenerator",
                         min = 1,
                         max = 1000,
-                        value = 1,
+                        value = 500,
                         width = "100%"
                     ),
                     width = 4,
@@ -156,7 +156,7 @@ ui <- bs4Dash::bs4DashPage(
                         inputId  = "ID_CB_WALLS",
                         label    = "Barrieren",
                         choices  = c( "Vertikal Links", "Vertikal Mitte", "Vertikal Rechts", "Horizontal" ),
-                        selected = character( 0 ),
+                        selected = "Vertikal Mitte",
                         inline   = T,
                         width    = "100%"
                     ),
@@ -187,7 +187,7 @@ ui <- bs4Dash::bs4DashPage(
         )
     ),
     footer = bs4Dash::bs4DashFooter(
-        HTML( '<a href="https://github.com/TPeschel/Pandemia/">https://github.com/TPeschel/Pandemia</a>' )
+        HTML( '<a href="https://tpeschel.github.io/Pandemia/">https://tpeschel.github.io/Pandemia</a>' )
     )
 )
 

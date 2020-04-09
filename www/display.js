@@ -1,64 +1,75 @@
-Display = function( cnvs_width, cnvs_height, disp_width, disp_height ) {
+Display = function( cnvs_width, cnvs_height, disp_width, disp_height, keep_aspect_ratio ) {
     
-    let dis = this;
+    let o = this;
   
-    dis.cnvs_width  = cnvs_width;
-    dis.cnvs_height = cnvs_height;
-    dis.disp_width  = disp_width;
-    dis.disp_height = disp_height;
+    o.cnvs_width  = cnvs_width;
+    o.cnvs_height = cnvs_height;
+    o.disp_width  = disp_width;
+    o.disp_height = disp_height;
+    o.keep_aspect_ratio = keep_aspect_ratio;
   
-    dis.create = function( ) {
+    o.create = function( ) {
   
       let
-      cdev = dis.cnvs_height / dis.cnvs_width,
-      ddev = dis.disp_height / dis.disp_width;
+      cdev = o.cnvs_height / o.cnvs_width,
+      ddev = o.disp_height / o.disp_width;
   
-      if( cdev < ddev ) {
+      if( o.keep_aspect_ratio ) {
   
-        dis.ad2c = dis.cnvs_height / dis.disp_height;
-  
-        dis.off = V2( .5 * ( dis.cnvs_width - dis.ad2c * dis.disp_width ), 0 );  
+        if( cdev < ddev ) {
+    
+          o.ad2c = V2( o.cnvs_height / o.disp_height, 1.0 );
+    
+          o.off = V2( 0.5 * ( o.cnvs_width - o.ad2c.x * o.disp_width ), 0 );  
+        }
+        else {
+    
+          o.ad2c = V2( 1.0, o.cnvs_width / o.disp_width );
+    
+          o.off = V2( 0, 0.5 * ( o.cnvs_height - o.ad2c.y * o.disp_height ) );
+        }
       }
       else {
-  
-        dis.ad2c = dis.cnvs_width / dis.disp_width;
-  
-        dis.off = V2( 0, .5 * ( dis.cnvs_height - dis.ad2c * dis.disp_height ) );
+        
+          o.ad2c = V2( o.cnvs_height / o.disp_height, o.cnvs_width / o.disp_width );
+    
+          o.off = V2( 0, 0 );
       }
   
-      dis.ac2d = 1. / dis.ad2c;
+      o.ac2d.x = 1.0 / o.ad2c.x;
+      o.ac2d.y = 1.0 / o.ad2c.y;
     };
   
-    dis.xd2c = function( x ) {
+    o.xd2c = function( x ) {
   
-      return dis.off.x + x * dis.ad2c;
-    }
+      return o.off.x + x * o.ad2c.x;
+    };
   
-    dis.yd2c = function( y ) {
+    o.yd2c = function( y ) {
   
-      return dis.off.y + y * dis.ad2c;
-    }
+      return o.off.y + y * o.ad2c.y;
+    };
   
-    dis.d2c = function( dp ) {
+    o.d2c = function( dp ) {
   
-      return V2( dis.xd2c( dp.x ), dis.yd2c( dp.y ) ) ;
-    }
+      return V2( o.xd2c( dp.x ), o.yd2c( dp.y ) ) ;
+    };
   
-    dis.xc2d = function( x ) {
+    o.xc2d = function( x ) {
   
-      return ( x - dis.off.x ) * dis.ac2d;
-    }
+      return ( x - o.off.x ) * o.ac2d.x;
+    };
   
-    dis.yc2d = function( y ) {
+    o.yc2d = function( y ) {
   
-      return ( y - dis.off.y ) * dis.ac2d;
-    }
+      return ( y - o.off.y ) * o.ac2d.y;
+    };
   
-    dis.c2d = function( cp ) {
+    o.c2d = function( cp ) {
   
-      return V2( dis.xc2d( cp.x ), dis.yc2d( cp.y ) );
-    }
+      return V2( o.xc2d( cp.x ), o.yc2d( cp.y ) );
+    };
   
-    dis.create( );
-}
+    o.create( );
+};
   
