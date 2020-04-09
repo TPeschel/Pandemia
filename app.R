@@ -6,7 +6,7 @@ ui <- bs4Dash::bs4DashPage(
     sidebar = bs4Dash::bs4DashSidebar( disable = T ),
     navbar = bs4Dash::bs4DashNavbar( 
         skin = "light",
-        rightUi = HTML( "<a href=https://tpeschel.github.io/Pandemia/><h3>Pandemie Simulation</h3></a>" ),
+        leftUi = HTML( "<a href=https://tpeschel.github.io/Pandemia/><h3>Pandemie Simulation</h3></a>" ),
         controlbarIcon = NULL
     ),
     controlbar = bs4Dash::bs4DashControlbar(
@@ -51,6 +51,28 @@ ui <- bs4Dash::bs4DashPage(
                 ),
                 column(
                     sliderInput(
+                        inputId = "ID_SI_DAMP",
+                        label = "Dämpfung der Agilität in Quarantäne",
+                        min = 0,
+                        max = 1,
+                        value = 0.5,
+                        width = "100%"
+                    ),
+                    width = 4,
+                ),
+                column(
+                    sliderInput(
+                        inputId = "ID_SI_ACC_QUARA",
+                        label = "Isolation in Quarantäne",
+                        min = 1,
+                        max = 10,
+                        value = 5,
+                        width = "100%"
+                    ),
+                    width = 4,
+                ),
+                column(
+                    sliderInput(
                         inputId = "ID_SI_VEL",
                         label = "Agilität",
                         min = 0,
@@ -63,7 +85,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_ACC",
-                        label = "Social Diastancing",
+                        label = "Social Distancing",
                         min = 0,
                         max = 1000,
                         value = 250,

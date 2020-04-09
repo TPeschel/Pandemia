@@ -1,3 +1,5 @@
+
+// original code from:
 // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript/47593316#47593316
 function RNG( seed ) {
   
@@ -14,12 +16,12 @@ RNG.prototype.nextInt = function() {
     this.state = ( this.a * this.state + this.c ) % this.m;
   
     return this.state;
-}
+};
 
 RNG.prototype.nextFloat = function( ) {
     // returns in range [0,1]
     return this.nextInt( ) / ( this.m - 1 );
-}
+};
 
 RNG.prototype.nextRange = function( start, end ) {
     
@@ -30,12 +32,12 @@ RNG.prototype.nextRange = function( start, end ) {
     randomUnder1 = this.nextInt( ) / this.m;
 
     return start + Math.floor( randomUnder1 * rangeSize );
-}
+};
 
 RNG.prototype.choice = function( array ) {
   
     return array[ this.nextRange( 0, array.length ) ];
-}
+};
 
 // let rng = new RNG( 20 );
 

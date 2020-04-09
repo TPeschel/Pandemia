@@ -122,7 +122,9 @@ Pandemia = function(
 	},
 	max_hospital = 0.1,
 	mortality_inside = 0.1,
-	mortality_outside = 0.25 ) {
+	mortality_outside = 0.25,
+	damping_quara = dp,
+	acc_quara = aq ) {
 	
 		let o = this;
 		
@@ -141,6 +143,8 @@ Pandemia = function(
 		o.rad           = radius;
 		o.vel           = velocity;
 		o.acc           = acceleration;
+		o.damp          = damping_quara,
+		o.acq           = acc_quara,
 		o.max_sicks     = max_hospital * count_of_humans_x * count_of_humans_y;
 		o.mort_in       = mortality_inside,
 		o.mort_out      = mortality_outside,
@@ -323,8 +327,8 @@ Pandemia = function(
 		
 			if( h.state == STATE.sick_treated ) {
 		
-				h.vel.x *= 0.98;
-				h.vel.y *= 0.98;        
+				h.vel.x *= ( 1.0 - 0.03 * o.damp );
+				h.vel.y *= ( 1.0 - 0.03 * o.damp );
 			}
 		
 			h.pos.x += h.vel.x;
@@ -376,6 +380,15 @@ Pandemia = function(
 
 							h2.acc.x += a * dn.x;
 							h2.acc.y += a * dn.y;
+						}
+
+						if( ( h1.state == STATE.sick_treated ) || ( h2.state == STATE.sick_treated ) ) {
+
+							h1.acc.x -= o.acq * a * dn.x;
+							h1.acc.y -= o.acq * a * dn.y;
+						
+							h2.acc.x += o.acq * a * dn.x;
+							h2.acc.y += o.acq * a * dn.y;
 						}
 					}
 				

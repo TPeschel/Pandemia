@@ -76,6 +76,8 @@
 						rd = parseInt( document.getElementById( 'ID_SI_RADIUS' ).value ),
 						vl = parseInt( document.getElementById( 'ID_SI_VEL' ).value ),
 						ac = parseInt( document.getElementById( 'ID_SI_ACC' ).value ),
+						dp = parseFloat( document.getElementById( 'ID_SI_DAMP' ).value ),
+						aq = parseFloat( document.getElementById( 'ID_SI_ACC_QUARA' ).value ),
 						st = parseInt( document.getElementById( 'ID_SI_ST' ).value ),
 						se = parseInt( document.getElementById( 'ID_SI_SEED' ).value ),
 						mi = parseInt( document.getElementById( 'ID_SI_MORTALITY_INSIDE' ).value ),
@@ -83,7 +85,7 @@
 						mh = parseFloat( document.getElementById( 'ID_SI_MAX_HOSP' ).value );
 						
 
-						pans = new Pandemia( "cnvs", count_of_humans_x = cx, count_of_humans_y = cy, radius = 0.001 * rd, velocity = 1e-5 * vl, acceleration = ac * 1e-9, sicktime = st, seed = se, addwalls = walls_sel, colors = colors, max_hospital = .01 * mh, mortality_inside = .01 * mi, mortality_outside = .01 * mo );
+						pans = new Pandemia( "cnvs", count_of_humans_x = cx, count_of_humans_y = cy, radius = 0.001 * rd, velocity = 1e-5 * vl, acceleration = ac * 1e-9, sicktime = st, seed = se, addwalls = walls_sel, colors = colors, max_hospital = .01 * mh, mortality_inside = .01 * mi, mortality_outside = .01 * mo, damping_quara = dp, acc_quara = aq );
 						
 						hist = new Histogram( "histo", 2000, pans.hmn.length, colors, max_hospital = .01 * mh );
 						
