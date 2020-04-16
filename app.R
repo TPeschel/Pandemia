@@ -6,7 +6,7 @@ ui <- bs4Dash::bs4DashPage(
     sidebar = bs4Dash::bs4DashSidebar( disable = T ),
     navbar = bs4Dash::bs4DashNavbar( 
         skin = "light",
-        leftUi = HTML( "<font color=#428BC8><h2><b>Pandemie Simulation</b></h2></font>" ),
+        leftUi = HTML( "<font color=#428BC8><h2><b>Pandemic Simulation</b></h2></font>" ),
         rightUi = HTML( "<a href=https://tpeschel.github.io/Pandemia/><h3>home</h3></a>" ),
         controlbarIcon = NULL
     ),
@@ -15,12 +15,12 @@ ui <- bs4Dash::bs4DashPage(
     ),
     body = bs4Dash::bs4DashBody(
         bs4Dash::bs4Card(
-            title = "Einstellungen",
+            title = "Settings",
             fluidRow(
                 column(
                     sliderInput(
                         inputId = "ID_SI_COUNT_X",
-                        label = "Menschen pro Zeile",
+                        label = "Individuals per row",
                         min = 2,
                         max = 50,
                         value = 20,
@@ -31,7 +31,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_COUNT_Y",
-                        label = "Menschen pro Spalte",
+                        label = "Individuals per column",
                         min = 1,
                         max = 25,
                         value = 10,
@@ -42,7 +42,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_RADIUS",
-                        label = "Radius",
+                        label = "Radius / Distance ~ Reciproke Volume / Space",
                         min = 10,
                         max = 25,
                         value = 15,
@@ -53,7 +53,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_VEL",
-                        label = "Agilität",
+                        label = "Agility",
                         min = 0,
                         max = 1000,
                         value = 500,
@@ -64,7 +64,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_DAMP",
-                        label = "Dämpfung der Agilität in Quarantäne",
+                        label = "Damping of Agility in Quarantine",
                         min = 0,
                         max = 1,
                         value = 0.5,
@@ -86,7 +86,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_ACC_QUARA",
-                        label = "Social Distancing in Quarantäne",
+                        label = "Social Distancing in Quarantine",
                         min = 1,
                         max = 10,
                         value = 2,
@@ -97,7 +97,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_MORTALITY_INSIDE",
-                        label = "Mortalität innerhalb des Gesundheitswesens in %",
+                        label = "Lethality inside Health Care System in %",
                         min   = 0,
                         max   = 100,
                         value = 5,
@@ -109,7 +109,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_MORTALITY_OUTSIDE",
-                        label   = "Mortalität ausserhalb des Gesundheitswesens in %",
+                        label   = "Lethality outside Health Care System in %",
                         min     = 0,
                         max     = 100,
                         value   = 25,
@@ -120,7 +120,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_MAX_HOSP",
-                        label = "Kapazität des Gesundheitswesens in %",
+                        label = "Capacity of Health Care System in %",
                         min = 0,
                         max = 100,
                         value = 10,
@@ -132,7 +132,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_ST",
-                        label = "Infektionsdauer",
+                        label = "Duration of Infection",
                         min = 1,
                         max = 1000,
                         value = 500,
@@ -143,7 +143,7 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     sliderInput(
                         inputId = "ID_SI_SEED",
-                        label = "Startwert für Zufallsgenerator",
+                        label = "Seed of Random Generator",
                         min = 1,
                         max = 1000,
                         value = 500,
@@ -154,9 +154,9 @@ ui <- bs4Dash::bs4DashPage(
                 column(
                     checkboxGroupInput(
                         inputId  = "ID_CB_WALLS",
-                        label    = "Barrieren",
-                        choices  = c( "Vertikal Links", "Vertikal Mitte", "Vertikal Rechts", "Horizontal" ),
-                        selected = "Vertikal Mitte",
+                        label    = "Barriers",
+                        choices  = c( "Vertical Left", "Vertical Center", "Vertical Right", "Horizontal" ),
+                        selected = "Vertical Center",
                         inline   = T,
                         width    = "100%"
                     ),
@@ -178,7 +178,7 @@ ui <- bs4Dash::bs4DashPage(
             width = 12
         ),
         bs4Dash::bs4Card(
-            title = "Pandemie Simulation",
+            title = "Pandemic Simulation",
             includeHTML( "www/pandemia.html" ),
             width = 12,
             #height = "100%",

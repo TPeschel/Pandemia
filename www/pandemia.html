@@ -57,9 +57,9 @@
 						for( let w of event.value ) {
 							
 							switch( w ) {
-								case 'Vertikal Links': walls_sel.push( walls[ 0 ] ); break;
-								case 'Vertikal Mitte': walls_sel.push( walls[ 1 ] ); break;
-								case 'Vertikal Rechts': walls_sel.push( walls[ 2 ] ); break;
+								case 'Vertical Left': walls_sel.push( walls[ 0 ] ); break;
+								case 'Vertical Center': walls_sel.push( walls[ 1 ] ); break;
+								case 'Vertical Right': walls_sel.push( walls[ 2 ] ); break;
 								case 'Horizontal' : walls_sel.push( walls[ 3 ] ); break;
 								default:
 									// code
@@ -120,13 +120,13 @@
 					
 					document.getElementById( "info" ).innerHTML = 
 					"<font color=black>Total: " + pans.hmn.length + "</font><br>" +
-					"<font color=" + colors.dead.untreated + ">Tote ausserhalb des Gesundheitswesens: " + pans.states.dead.untreated + "</font><br>" +
-					"<font color=" + colors.dead.treated + ">Tote innerhalb des Gesundheitswesens: " + pans.states.dead.treated + "</font><br>" +
-					"<font color=" + colors.healthy + ">Gesunde: " + pans.states.healthy + "</font><br>" +
-					"<font color=" + colors.recovered.untreated + ">Genesene ausserhalb des Gesundheitswesens: " + pans.states.recovered.untreated + "</font><br>" +
-					"<font color=" + colors.recovered.treated + ">Genesene innerhalb des Gesundheitswesens: " + pans.states.recovered.treated + "</font><br>" +
-					"<font color=" + colors.sick.untreated + ">Infizierte ausserhalb des Gesundheitswesens: " + pans.states.sick.untreated + "</font><br>" +
-					"<font color=" + colors.sick.treated + ">Infizierte innerhalb des Gesundheitswesens: " + pans.states.sick.treated + "</font>";
+					"<font color=" + colors.dead.untreated + ">Deaths inside Health Care System: " + pans.states.dead.untreated + "</font><br>" +
+					"<font color=" + colors.dead.treated + ">Deaths outside Health Care System: " + pans.states.dead.treated + "</font><br>" +
+					"<font color=" + colors.healthy + ">Healthy: " + pans.states.healthy + "</font><br>" +
+					"<font color=" + colors.recovered.untreated + ">Recovered outside Health Care System: " + pans.states.recovered.untreated + "</font><br>" +
+					"<font color=" + colors.recovered.treated + ">Recovered inside Health Care System: " + pans.states.recovered.treated + "</font><br>" +
+					"<font color=" + colors.sick.untreated + ">Infected outside Health Care System: " + pans.states.sick.untreated + "</font><br>" +
+					"<font color=" + colors.sick.treated + ">Infected inside Health Care System: " + pans.states.sick.treated + "</font>";
 				}
 			}
 
